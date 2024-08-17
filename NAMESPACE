@@ -1,1 +1,4 @@
 exportPattern("^[[:alpha:]]+")
+
+importFrom("methods", "new")
+importFrom("utils", "read.csv")

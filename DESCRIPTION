@@ -3,10 +3,10 @@ Type: Package
 Title: Cyber Gateway to Nanovesicles Underlying Signatures 
 Version: 0.1.0
 Author: Yein Chung
-Maintainer: yeinchung04@gmail.com
+Maintainer: Yein Chung <yeinchung04@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/yeinchung/Cygnus
@@ -18,4 +18,6 @@ Imports:
   plotly,
   Rtsne,
   rlang, 
-  tibble
+  tibble,
+  methods
+RoxygenNote: 7.3.2

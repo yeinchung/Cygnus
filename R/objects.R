@@ -8,8 +8,8 @@
 #' @slot markers_meta Metadata for each marker
 #' @slot marker_analysis Results from marker characterization analyses
 #' @slot dim_red Coordinates from dimensionality reduction analysis
-#'
-CygnuObject <- setClass(
+#' @export
+CygnusObject <- setClass(
   Class = "CygnusObject",
   slots = list(
     matrices = "list",
@@ -23,9 +23,14 @@ CygnuObject <- setClass(
 
 #' Create a Cygnus Object
 #'
-#' Create a Cygnus Object from the AIVIA output file format. Columns for markers
-#' and metadata need to be specified.
+#' This function creates a Cygnus Object from the AIVIA output file format.
+#' The user must specify the columns for markers and metadata.
 #'
+#' @param data.path Character string specifying the path to the data file.
+#' @param markers_col A vector of column names or indices representing markers.
+#' @param meta_col A vector of column names or indices representing metadata.
+#' @return An object of class \code{CygnusObject}.
+#' @export
 CreateCygnus <- function(
     data.path,
     markers_col,
@@ -33,7 +38,23 @@ CreateCygnus <- function(
 ){
   data <- read.csv(data.path)
   obj <- new("CygnusObject",
-             matrices[['Raw_scores']] = data[markers_col],
-             ev_meta = data[markers_col])
+             matrices =  list('Raw Score' = data[markers_col]),
+             ev_meta = data[markers_col],
+             markers_meta = list(),
+             marker_analysis = NULL,
+             dim_red = list())
   return(obj)
 }
+
+setMethod(
+  f = "show",
+  signature = "CygnusObject",
+  definition = function(object) {
+    cat("Summary of CygnusData:\n")
+    cat("Data:\n")
+    print(head(object@exp_matrix))
+    cat("Metadata:\n")
+    print(head(object@metadata))
+  }
+)
+
