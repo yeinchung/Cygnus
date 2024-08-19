@@ -4,7 +4,7 @@
 \alias{CreateCygnus}
 \title{Create a Cygnus Object}
 \usage{
-CreateCygnus(data.path, markers_col, meta_col)
+CreateCygnus(data.path, markers_col = NULL, meta_col = NULL)
 }
 \arguments{
 \item{data.path}{Character string specifying the path to the data file.}
@@ -18,5 +18,6 @@ An object of class \code{CygnusObject}.
 }
 \description{
 This function creates a Cygnus Object from the AIVIA output file format.
-The user must specify the columns for markers and metadata.
+If no columns are provided, a Shiny app will be launched to allow
+interactive selection of columns.
 }

@@ -22,5 +22,7 @@ Imports:
   methods,
   pheatmap,
   tidyverse,
-  uwot
+  uwot, 
+  shiny,
+  plotly
 RoxygenNote: 7.3.2

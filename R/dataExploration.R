@@ -172,3 +172,94 @@ markRelevantMarkers <- function(data, relevant_markers = NULL) {
 
   return(data)
 }
+
+#' Plot Distributions of Selected Markers For Threshold Selection
+#'
+#' This function plots the distribution of expression levels for selected markers in an expression matrix.
+#' Users can interactively select regions above the x-axis to set positive thresholds for each marker.
+#'
+#' @param obj An object of class \code{CygnusObject} containing the expression matrix.
+#' @param plot_markers A vector of marker names to plot. If set to "ALL", distributions for all markers will be plotted. Default is "ALL".
+#' @param matrix Character string specifying the name of the matrix to use. Default is "Raw_Score".
+#' @return A list of selected thresholds for each marker.
+#' @export
+selectThreshold <- function(
+    obj,
+    plot_markers = "ALL",
+    matrix = "Raw_Score"
+) {
+  # Check if the specified matrix exists
+  if (!(matrix %in% names(obj@matrices))) {
+    stop(paste("Matrix", matrix, "not found in CygnusObject"))
+  }
+
+  matrix_data <- obj@matrices[[matrix]]
+
+  if (plot_markers == "ALL") {
+    plot_markers <- colnames(matrix_data)
+  } else {
+    plot_markers <- intersect(plot_markers, colnames(matrix_data))
+  }
+
+  num_cols <- length(plot_markers)
+
+  # Ensure valid plotting parameters
+  if (num_cols == 0) {
+    stop("No markers to plot.")
+  }
+
+  thresholds <- shiny::shinyApp(
+    ui = shiny::fluidPage(
+      shiny::titlePanel("Select Thresholds for Markers"),
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::actionButton("submit", "Submit Thresholds")
+        ),
+        shiny::mainPanel(
+          shiny::uiOutput("plots")
+        )
+      )
+    ),
+    server = function(input, output, session) {
+      selected_thresholds <- shiny::reactiveVal(list())
+
+      output$plots <- shiny::renderUI({
+        plot_outputs <- lapply(plot_markers, function(marker) {
+          plotly::plotlyOutput(paste0("plot_", marker))
+        })
+        do.call(shiny::tagList, plot_outputs)
+      })
+
+      lapply(plot_markers, function(marker) {
+        output[[paste0("plot_", marker)]] <- plotly::renderPlotly({
+          p <- ggplot2::ggplot(data.frame(x = matrix_data[, marker]), ggplot2::aes(x = x)) +
+            ggplot2::geom_histogram(bins = 100, fill = "blue", alpha = 0.6) +
+            ggplot2::labs(title = marker, x = "", y = "Frequency")
+
+          plotly::ggplotly(p) %>%
+            plotly::layout(dragmode = "select") %>%
+            plotly::event_register("plotly_selected")
+        })
+
+        shiny::observeEvent(plotly::event_data("plotly_selected", source = paste0("plot_", marker)), {
+          selected_data <- plotly::event_data("plotly_selected", source = paste0("plot_", marker))
+          if (!is.null(selected_data)) {
+            selected_range <- range(selected_data$x)
+            current_thresholds <- selected_thresholds()
+            current_thresholds[[marker]] <- selected_range[2]
+            selected_thresholds(current_thresholds)
+          }
+        })
+      })
+
+      shiny::observeEvent(input$submit, {
+        shiny::stopApp(selected_thresholds())
+      })
+    }
+  )
+
+  selected_thresholds <- shiny::runApp(thresholds)
+
+  return(selected_thresholds)
+}
+
