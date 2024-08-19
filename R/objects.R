@@ -38,8 +38,8 @@ CreateCygnus <- function(
 ){
   data <- read.csv(data.path)
   obj <- new("CygnusObject",
-             matrices =  list('Raw Score' = data[markers_col]),
-             ev_meta = data[markers_col],
+             matrices =  list('Raw_Score' = data[markers_col]),
+             ev_meta = data[meta_col],
              markers_meta = list(),
              marker_analysis = NULL,
              dim_red = list())
@@ -50,11 +50,12 @@ setMethod(
   f = "show",
   signature = "CygnusObject",
   definition = function(object) {
-    cat("Summary of CygnusData:\n")
-    cat("Data:\n")
-    print(head(object@exp_matrix))
-    cat("Metadata:\n")
-    print(head(object@metadata))
+    cat("Summary of CygnusObject:\n")
+    cat("Slot: ")
+    print(names(object@matrices))
+    cat("Numer of EVs: ")
+    print(nrow(object@matrices$Raw_Score))
   }
 )
+
 

@@ -3,30 +3,44 @@
 #' This function plots the distribution of expression levels for selected markers in an expression matrix.
 #' The user can specify a subset of markers to plot, or plot all markers by default.
 #'
-#' @param obj An object containing the expression matrix, typically a Seurat or similar object.
+#' @param obj An object of class \code{CygnusObject} containing the expression matrix.
 #' @param plot_markers A vector of marker names to plot. If set to "ALL", distributions for all markers will be plotted. Default is "ALL".
-#' @param matrix Character string specifying the name of the slot containing the expression matrix in \code{obj}. Default is "exp_matrix".
+#' @param matrix Character string specifying the name of the matrix to use. Default is "Raw_Score".
 #' @return A series of histogram plots, each representing the distribution of expression levels for the specified markers.
 #' @export
 plotDistribution <- function(
     obj,
     plot_markers = "ALL",
-    matrix = "exp_matrix"
+    matrix = "Raw_Score"
 ) {
+  # Check if the specified matrix exists
+  if (!(matrix %in% names(obj@matrices))) {
+    stop(paste("Matrix", matrix, "not found in CygnusObject"))
+  }
+
+  matrix_data <- obj@matrices[[matrix]]
+
   if (plot_markers == "ALL") {
-    plot_markers <- colnames(obj@exp_matrix)
+    plot_markers <- colnames(matrix_data)
   } else {
-    plot_markers <- intersect(plot_markers, colnames(obj@exp_matrix))
+    plot_markers <- intersect(plot_markers, colnames(matrix_data))
   }
 
   num_cols <- length(plot_markers)
-  num_rows <- ceiling(num_cols / 3)
 
-  par(mfrow = c(num_rows, 3))
+  # Ensure num_rows is at least 1
+  num_rows <- max(1, ceiling(num_cols / 3))
+
+  # Ensure valid plotting parameters
+  if (num_cols == 0) {
+    stop("No markers to plot.")
+  }
+
+  par(mfrow = c(num_rows, min(3, num_cols)))
   par(mar = c(2, 2, 2, 1))
 
   for (marker in plot_markers) {
-    hist(obj@exp_matrix[, marker], breaks = 1000,
+    hist(matrix_data[, marker], breaks = 1000,
          main = paste(marker),
          xlab = "", ylab = "")
   }
@@ -39,7 +53,7 @@ plotDistribution <- function(
 #' This function generates a heatmap of average marker expressions, grouped by a specified metadata column.
 #' The heatmap allows customization of clustering distance, color palette, font size, and scaling method.
 #'
-#' @param data An object containing an expression matrix and metadata, typically a Seurat or similar object.
+#' @param data An object of class \code{CygnusObject} containing an expression matrix and metadata.
 #' @param group_column Character string specifying the metadata column to group by.
 #' @param clustering_distance Character string specifying the distance metric for clustering columns. Default is "euclidean".
 #' @param colors A color palette to use for the heatmap. Default is a reversed "RdYlBu" palette from RColorBrewer.
@@ -57,25 +71,25 @@ plotAvgHeatmap <- function(data, group_column,
                            cluster_rows = FALSE,
                            na.rm = TRUE) {
 
-  expression_matrix <- data@exp_matrix
-  group_metadata <- data@metadata[[group_column]]
+  expression_matrix <- data@matrices$Raw_Score
+  group_metadata <- data@ev_meta[[group_column]]
 
   combined_data <- cbind(expression_matrix, group_metadata)
 
   avg_marker_expressions <- combined_data %>%
-    group_by(group_metadata) %>%
-    summarise(across(everything(), mean, na.rm = na.rm)) %>%
-    select(-group_metadata) %>%
+    dplyr::group_by(group_metadata) %>%
+    dplyr::summarise(across(everything(), mean, na.rm = na.rm)) %>%
+    dplyr::select(-group_metadata) %>%
     as.matrix()
 
-  pheatmap(avg_marker_expressions,
-           clustering_distance_cols = clustering_distance,
-           cluster_rows = cluster_rows,
-           color = colors,
-           main = paste("Average Marker Expressions by", group_column),
-           fontsize = fontsize,
-           scale = scale,
-           labels_row = unique(group_metadata))
+  pheatmap::pheatmap(avg_marker_expressions,
+                     clustering_distance_cols = clustering_distance,
+                     cluster_rows = cluster_rows,
+                     color = colors,
+                     main = paste("Average Marker Expressions by", group_column),
+                     fontsize = fontsize,
+                     scale = scale,
+                     labels_row = unique(group_metadata))
 }
 
 #' Scale Expression Matrix by Maximum Value
@@ -83,20 +97,54 @@ plotAvgHeatmap <- function(data, group_column,
 #' This function scales the expression matrix by dividing each marker's values by the maximum value in that marker.
 #' The scaled matrix is added as an additional layer in the data object.
 #'
-#' @param data An object containing an expression matrix and metadata, typically a Seurat or similar object.
+#' @param data An object of class \code{CygnusObject} containing an expression matrix.
 #' @param matrix_name Character string specifying the name for the new scaled matrix layer. Default is "scaled_exp_matrix".
 #' @return The data object with an additional layer containing the scaled expression matrix.
 #' @export
 scaleExpressionMatrix <- function(data, matrix_name = "scaled_exp_matrix") {
 
-  expression_matrix <- data@exp_matrix
+  expression_matrix <- data@matrices$Raw_Score
 
   max_values <- apply(expression_matrix, 2, max, na.rm = TRUE)
   scaled_matrix <- sweep(expression_matrix, 2, max_values, `/`)
 
-  data[[matrix_name]] <- scaled_matrix
+  data@matrices[[matrix_name]] <- scaled_matrix
 
   return(data)
 }
 
+#' Create Binary Expression Matrix Based on Thresholds
+#'
+#' This function creates a binary matrix where each entry is 1 if the marker's raw score exceeds a specified threshold,
+#' and 0 otherwise. The thresholds can be customized for each marker using a vector. If no vector is provided,
+#' a default threshold of 100 is used for all markers. The binary matrix is added as an additional layer in the data object.
+#'
+#' @param data An object of class \code{CygnusObject} containing an expression matrix.
+#' @param thresholds Numeric vector specifying the thresholds for each marker. If a single number is provided, it is used for all markers. Default is 100.
+#' @param matrix_name Character string specifying the name for the new binary matrix layer. Default is "binary_exp_matrix".
+#' @return The data object with an additional layer containing the binary expression matrix.
+#' @export
+createBinaryMatrix <- function(data, thresholds = 100, matrix_name = "binary_exp_matrix") {
 
+  if (!("Raw_Score" %in% names(data@matrices))) {
+    stop("Raw_Score matrix not found in CygnusObject")
+  }
+
+  expression_matrix <- data@matrices$Raw_Score
+  num_markers <- ncol(expression_matrix)
+
+  if (length(thresholds) == 1) {
+    thresholds <- rep(thresholds, num_markers)
+  } else if (length(thresholds) != num_markers) {
+    stop("The length of the thresholds vector must match the number of markers in the expression matrix.")
+  }
+
+  binary_matrix <- expression_matrix
+  for (i in seq_len(num_markers)) {
+    binary_matrix[, i] <- ifelse(expression_matrix[, i] > thresholds[i], 1, 0)
+  }
+
+  data@matrices[[matrix_name]] <- binary_matrix
+
+  return(data)
+}
