@@ -77,7 +77,7 @@ runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
     stop("The expression matrix has zero rows or columns.")
   }
 
-
+  # need to add random seed
   tsne_result <- tryCatch(
     {
       Rtsne::Rtsne(expression_matrix, dims = dims, ...)
@@ -184,13 +184,12 @@ plotPCA <- function(data, plot_3d = FALSE, color_by = NULL) {
   colnames(plot_data) <- paste0("V", 1:ncol(plot_data))
 
   if (!is.null(color_by) && color_by %in% names(data@ev_meta)) {
-    plot_data$color <- data@ev_meta[[color_by]]
+    plot_data$meta <- data@ev_meta[[color_by]]
+    plot_data$meta <- as.factor(plot_data$meta)
 
-
-    if (is.factor(plot_data$color)) {
-      library(RColorBrewer)
-      color_palette <- brewer.pal(length(levels(plot_data$color)), "Set1")
-      plot_data$color <- color_palette[plot_data$color]
+    if (is.factor(plot_data$meta)) { # need to fix
+      color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set1")
+      plot_data$color <- color_palette[plot_data$meta]
     }
   } else if (!is.null(color_by)) {
     warning(paste("Metadata column", color_by, "not found. Plotting without color."))
@@ -198,7 +197,7 @@ plotPCA <- function(data, plot_3d = FALSE, color_by = NULL) {
 
   if (plot_3d && ncol(pca_coords) >= 3) {
     if (!is.null(plot_data$color)) {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~color, type = 'scatter3d', mode = 'markers')
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~meta, type = 'scatter3d', mode = 'markers')
     } else {
       plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'markers')
     }
