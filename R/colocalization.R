@@ -2,9 +2,10 @@
 #'
 #' @param data An object of class \code{CygnusObject} containing the binary expression matrix.
 #' @param markers Character vector specifying which markers to include in the UpSet plot. If NULL, all relevant markers are used.
+#' @param ... Additional arguments to pass to the upset function.
 #' @return An UpSet plot visualizing the intersections of relevant markers.
 #' @export
-plotUpSet <- function(data, markers = NULL) {
+plotUpSet <- function(data, markers = NULL, ...) {
   # Check if binary_exp_matrix exists
   if (!"binary_exp_matrix" %in% names(data@matrices)) {
     stop("Binary expression matrix not found. Please run createBinaryMatrix first.")
@@ -29,6 +30,5 @@ plotUpSet <- function(data, markers = NULL) {
   binary_df <- as.data.frame(binary_matrix)
   colnames(binary_df) <- relevant_markers
 
-  upset_data <- UpSetR::fromList(as.list(binary_df))
-  UpSetR::upset(upset_data, sets = colnames(binary_df))
+  UpSetR::upset(binary_df, ...)
 }

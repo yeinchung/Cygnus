@@ -4,12 +4,14 @@
 \alias{plotUpSet}
 \title{Generate an UpSet Plot for Relevant Markers}
 \usage{
-plotUpSet(data, markers = NULL)
+plotUpSet(data, markers = NULL, ...)
 }
 \arguments{
 \item{data}{An object of class \code{CygnusObject} containing the binary expression matrix.}
 
 \item{markers}{Character vector specifying which markers to include in the UpSet plot. If NULL, all relevant markers are used.}
+
+\item{...}{Additional arguments to pass to the upset function.}
 }
 \value{
 An UpSet plot visualizing the intersections of relevant markers.

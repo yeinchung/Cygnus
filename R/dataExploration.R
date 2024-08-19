@@ -173,6 +173,64 @@ markRelevantMarkers <- function(data, relevant_markers = NULL) {
   return(data)
 }
 
+#' Mark Relevant Markers Using User Interface
+#'
+#' This function updates the markers_meta slot in a CygnusObject to mark specified markers as relevant.
+#' The markers_meta must be a data frame with a 'marker' column. The function adds a 'relevant' list.
+#'
+#' @param data An object of class \code{CygnusObject}.
+#' @param relevant_markers A character vector of marker names to be marked as relevant. If NULL, no markers are marked as relevant.
+#' @return The updated \code{CygnusObject} with relevant markers marked.
+#' @export
+markRelevantMarkersUI <- function(data) {
+  result <- shiny::shinyApp(
+
+    # user interface
+    ui = shiny::fluidPage(
+      shiny::titlePanel("Select Relevant Markers"),
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          shiny::selectInput("relevant_markers", "Select Relevant Markers",
+                             choices = colnames(data@matrices$Raw_Score),
+                             selected = NULL, multiple = TRUE),
+          shiny::actionButton("submit", "Update Cygnus Object")
+        ),
+        shiny::mainPanel(
+          shiny::verbatimTextOutput("summary")
+        )
+      )
+    ),
+
+    # server
+    server = function(input, output, session) {
+      markers_meta <- shiny::reactiveVal(data@markers_meta)
+
+      shiny::observeEvent(input$submit, {
+        req(input$relevant_markers)
+
+        updated_meta <- markers_meta()
+        names_vector <- colnames(data@matrices$Raw_Score)
+        updated_meta[['relevant']] <- setNames(rep(FALSE, length(names_vector)), names_vector)
+
+        for (marker in input$relevant_markers) {
+          updated_meta[['relevant']][marker] <- TRUE
+        }
+
+        data@markers_meta <- updated_meta
+
+        output$summary <- shiny::renderPrint({
+          list(Relevant_Markers = input$relevant_markers)
+        })
+
+        shiny::stopApp(data)
+      })
+    }
+  )
+  updated_data <- shiny::runApp(result)
+  return(updated_data)
+}
+
+
 #' Plot Distributions of Selected Markers For Threshold Selection
 #'
 #' This function plots the distribution of expression levels for selected markers in an expression matrix.
