@@ -148,3 +148,27 @@ createBinaryMatrix <- function(data, thresholds = 100, matrix_name = "binary_exp
 
   return(data)
 }
+
+#' Mark Relevant Markers
+#'
+#' This function updates the markers_meta slot in a CygnusObject to mark specified markers as relevant.
+#' The markers_meta must be a data frame with a 'marker' column. The function adds a 'relevant' list.
+#'
+#' @param data An object of class \code{CygnusObject}.
+#' @param relevant_markers A character vector of marker names to be marked as relevant. If NULL, no markers are marked as relevant.
+#' @return The updated \code{CygnusObject} with relevant markers marked.
+#' @export
+markRelevantMarkers <- function(data, relevant_markers = NULL) {
+  data@markers_meta[['marker']] <- colnames(data@matrices$Raw_Score)
+
+  names_vector <- colnames(data@matrices$Raw_Score)
+  data@markers_meta[['relevant']] <- setNames(rep(FALSE, length(names_vector)), names_vector)
+
+  for(marker in colnames(data@matrices$Raw_Score)) {
+    if(marker %in% relevant_markers) {
+      data@markers_meta[['relevant']][marker] <- TRUE
+    }
+  }
+
+  return(data)
+}

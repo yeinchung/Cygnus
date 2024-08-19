@@ -31,18 +31,16 @@ CygnusObject <- setClass(
 #' @param meta_col A vector of column names or indices representing metadata.
 #' @return An object of class \code{CygnusObject}.
 #' @export
-CreateCygnus <- function(
-    data.path,
-    markers_col,
-    meta_col
-){
+CreateCygnus <- function(data.path, markers_col, meta_col) {
   data <- read.csv(data.path)
+
   obj <- new("CygnusObject",
              matrices =  list('Raw_Score' = data[markers_col]),
              ev_meta = data[meta_col],
              markers_meta = list(),
              marker_analysis = NULL,
              dim_red = list())
+
   return(obj)
 }
 
