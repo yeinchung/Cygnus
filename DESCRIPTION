@@ -21,5 +21,6 @@ Imports:
   tibble,
   methods,
   pheatmap,
-  tidyverse
+  tidyverse,
+  uwot
 RoxygenNote: 7.3.2

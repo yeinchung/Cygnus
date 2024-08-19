@@ -10,6 +10,9 @@ runUMAP(
   use_relevant = TRUE,
   dims = 2,
   use_pcs = FALSE,
+  n_neighbors = 30,
+  min_dist = 0.3,
+  verbose = TRUE,
   ...
 )
 }
@@ -24,7 +27,13 @@ runUMAP(
 
 \item{use_pcs}{Logical indicating whether to use PCA results as input. Default is FALSE.}
 
-\item{...}{Additional arguments to pass to the umap function.}
+\item{n_neighbors}{Numeric value specifying the number of neighbors for UMAP. Default is 30.}
+
+\item{min_dist}{Numeric value specifying the minimum distance for UMAP. Default is 0.3.}
+
+\item{verbose}{Logical value indicating whether to display a progress bar. Default is TRUE.}
+
+\item{...}{Additional arguments to pass to the \code{uwot::umap} function.}
 }
 \value{
 The updated CygnusObject with UMAP coordinates stored in the 'dim_red' slot.

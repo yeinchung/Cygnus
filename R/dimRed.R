@@ -99,10 +99,14 @@ runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
 #' @param use_relevant Logical indicating whether to use only relevant markers. Default is TRUE.
 #' @param dims Numeric value specifying the number of dimensions for UMAP. Default is 2.
 #' @param use_pcs Logical indicating whether to use PCA results as input. Default is FALSE.
-#' @param ... Additional arguments to pass to the umap function.
+#' @param n_neighbors Numeric value specifying the number of neighbors for UMAP. Default is 30.
+#' @param min_dist Numeric value specifying the minimum distance for UMAP. Default is 0.3.
+#' @param verbose Logical value indicating whether to display a progress bar. Default is TRUE.
+#' @param ... Additional arguments to pass to the \code{uwot::umap} function.
 #' @return The updated CygnusObject with UMAP coordinates stored in the 'dim_red' slot.
 #' @export
-runUMAP <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims = 2, use_pcs = FALSE, ...) {
+runUMAP <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims = 2, use_pcs = FALSE,
+                    n_neighbors = 30, min_dist = 0.3, verbose = TRUE, ...) {
   if (!(matrix_name %in% names(data@matrices))) {
     stop(paste("Matrix", matrix_name, "not found in CygnusObject"))
   }
@@ -125,25 +129,26 @@ runUMAP <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
     expression_matrix <- data@dim_red$PCA
   }
 
-
   if (nrow(expression_matrix) == 0 || ncol(expression_matrix) == 0) {
     stop("The expression matrix has zero rows or columns.")
   }
 
-
   umap_result <- tryCatch(
     {
-      umap::umap(expression_matrix, n_neighbors = 15, min_dist = 0.3, n_components = dims, ...)
+      uwot::umap(expression_matrix, n_neighbors = n_neighbors, min_dist = min_dist,
+                 n_components = dims, verbose = verbose, ...)
     },
     error = function(e) {
       stop("Error in UMAP computation: ", e$message)
     }
   )
 
-  data@dim_red$UMAP <- umap_result$layout
+  data@dim_red$UMAP <- umap_result
 
   return(data)
 }
+
+
 
 #' Plot Elbow Plot for PCA
 #'
@@ -210,4 +215,50 @@ plotPCA <- function(data, plot_3d = FALSE, color_by = NULL) {
   }
 }
 
+#' Visualize UMAP Results
+#'
+#' @param data An object of class \code{CygnusObject} containing UMAP results.
+#' @param plot_3d Logical value indicating whether to plot in 3D. Default is FALSE.
+#' @param color_by Character string specifying metadata column to color by. Default is NULL (no coloring).
+#' @return A plot of the UMAP results.
+#' @export
+plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL) {
+  if (!"UMAP" %in% names(data@dim_red)) {
+    stop("UMAP results not found. Run UMAP first.")
+  }
+
+  umap_coords <- data@dim_red$UMAP
+  if (is.null(umap_coords) || nrow(umap_coords) == 0 || ncol(umap_coords) < 2) {
+    stop("UMAP coordinates are not available or insufficient for plotting.")
+  }
+
+  plot_data <- as.data.frame(umap_coords)
+  colnames(plot_data) <- paste0("V", 1:ncol(plot_data))
+
+  if (!is.null(color_by) && color_by %in% names(data@ev_meta)) {
+    plot_data$meta <- data@ev_meta[[color_by]]
+    plot_data$meta <- as.factor(plot_data$meta)
+
+    if (is.factor(plot_data$meta)) {
+      color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set1")
+      plot_data$color <- color_palette[plot_data$meta]
+    }
+  } else if (!is.null(color_by)) {
+    warning(paste("Metadata column", color_by, "not found. Plotting without color."))
+  }
+
+  if (plot_3d && ncol(umap_coords) >= 3) {
+    if (!is.null(plot_data$color)) {
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~meta, type = 'scatter3d', mode = 'markers')
+    } else {
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'markers')
+    }
+  } else {
+    if (!is.null(plot_data$color)) {
+      plot(plot_data$V1, plot_data$V2, col = plot_data$color, xlab = "UMAP1", ylab = "UMAP2", main = "UMAP")
+    } else {
+      plot(plot_data$V1, plot_data$V2, xlab = "UMAP1", ylab = "UMAP2", main = "UMAP")
+    }
+  }
+}
 
