@@ -8,7 +8,7 @@ runUMAP(
   data,
   matrix_name = "Raw_Score",
   use_relevant = TRUE,
-  dims = 2,
+  dims = 3,
   use_pcs = FALSE,
   n_neighbors = 30,
   min_dist = 0.3,

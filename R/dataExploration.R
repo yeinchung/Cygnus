@@ -321,3 +321,31 @@ selectThreshold <- function(
   return(selected_thresholds)
 }
 
+#' Normalize Expression Data by Pan-EV Marker
+#'
+#' This method normalizes the expression matrix in the CygnusObject by dividing
+#' the expression values of all markers by the expression values of a specified
+#' pan-EV marker.
+#'
+#' @param data An object of class \code{CygnusObject}.
+#' @param pan_ev_marker Character string specifying the name of the pan-EV marker.
+#' @return The updated CygnusObject with normalized expression matrix.
+#' @export
+normalizeByPanEV <- function(data, pan_ev_marker) {
+  if (!(pan_ev_marker %in% colnames(data@matrices$Raw_Score))) {
+    stop(paste("Pan-EV marker", pan_ev_marker, "not found in the expression matrix."))
+  }
+
+  expression_matrix <- data@matrices$Raw_Score
+  pan_ev_values <- expression_matrix[, pan_ev_marker, drop = FALSE]
+
+  if (any(pan_ev_values == 0)) {
+    warning("Pan-EV marker contains zero values. Normalization may lead to division by zero.")
+  }
+
+  normalized_matrix <- sweep(expression_matrix, 1, pan_ev_values, FUN = "/")
+
+  data@matrices$normalized_exp_mat <- normalized_matrix
+
+  return(data)
+}

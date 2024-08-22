@@ -4,7 +4,7 @@
 \alias{plotPCA}
 \title{Visualize PCA Results}
 \usage{
-plotPCA(data, plot_3d = FALSE, color_by = NULL)
+plotPCA(data, plot_3d = FALSE, color_by = NULL, ...)
 }
 \arguments{
 \item{data}{An object of class \code{CygnusObject} containing PCA results.}
@@ -12,6 +12,8 @@ plotPCA(data, plot_3d = FALSE, color_by = NULL)
 \item{plot_3d}{Logical value indicating whether to plot in 3D. Default is FALSE.}
 
 \item{color_by}{Character string specifying metadata column to color by. Default is NULL (no coloring).}
+
+\item{...}{Additional arguments for the plot function}
 }
 \value{
 A plot of the PCA results.

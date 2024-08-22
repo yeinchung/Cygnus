@@ -10,6 +10,7 @@ runTSNE(
   use_relevant = TRUE,
   dims = 2,
   use_pcs = FALSE,
+  seed = 42,
   ...
 )
 }
@@ -23,6 +24,8 @@ runTSNE(
 \item{dims}{Numeric value specifying the number of dimensions for t-SNE. Default is 2.}
 
 \item{use_pcs}{Logical indicating whether to use PCA results as input. Default is FALSE.}
+
+\item{seed}{Numeric value for setting a random seed. Default is 42.}
 
 \item{...}{Additional arguments to pass to the Rtsne function.}
 }
