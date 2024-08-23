@@ -24,5 +24,6 @@ Imports:
   tidyverse,
   uwot, 
   shiny,
-  plotly
+  plotly,
+  tidyr
 RoxygenNote: 7.3.2
