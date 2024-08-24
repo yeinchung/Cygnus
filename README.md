@@ -21,21 +21,14 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 ```
 
-**Then, install ArchR:**
+**Then, install Cygnus:**
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
 
-**Lastly, install all of the ArchR dependencies that aren't installed by default:**
-``` r
-library(ArchR)
-ArchR::installExtraPackages()
-```
-If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. Additionally, please see the ArchR website (www.ArchRProject.com) where we have installation troubleshooting tips.
-
 # Issues using Cygnus?
 
-ArchR is currently in __beta__. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of Cygnus via
+Cygnus is currently in __beta__. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of Cygnus via
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
