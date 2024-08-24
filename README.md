@@ -1,4 +1,4 @@
-<p align="center">><img src="figures/image.png" alt="" width="350"></a></p>
+<p align="center"><img src="figures/image.png" alt="" width="350"></a></p>
 <hr>
 
 ### Cygnus Version 0.1.0
