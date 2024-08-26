@@ -28,7 +28,7 @@ devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::
 
 # Issues using Cygnus?
 
-Cygnus is currently in __beta__. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of Cygnus via
+Cygnus is currently in __beta__. If you think you have found a bug, please first install the latest version of Cygnus via
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
