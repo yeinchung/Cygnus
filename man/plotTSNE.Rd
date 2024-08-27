@@ -16,7 +16,7 @@ plotTSNE(data, plot_3d = FALSE, color_by = NULL, marker_size = 1)
 \item{marker_size}{Numeric value specifying the size of the markers in the plot. Default is 1.}
 }
 \value{
-A plot of the t-SNE results.
+A plot of the t-SNE results!
 }
 \description{
 Visualize t-SNE Results
