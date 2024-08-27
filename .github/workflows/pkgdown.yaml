@@ -48,12 +48,3 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
-
-template:
-  bootstrap: 5
-  lightswitch: true
-  bslib:
-    bootswatch: lux
-    pkgdown-nav-height: 100px
-
-
