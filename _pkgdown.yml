@@ -1,7 +1,4 @@
 url: https://yeinchung.github.io/Cygnus/
 template:
-  bslib:
-    version: 5
-  lightswitch: true
-
+  bootstrap: 5
 
