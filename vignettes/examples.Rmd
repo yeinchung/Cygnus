@@ -2,7 +2,7 @@
 
 This tutorial covers reading a processed input file from AIVIA to generating an example report and 3D plot formats required interactive data visualization. The instructions for package installation can be found <a href=https://yeinchung.github.io/Cygnus/>here</a>.
 
-For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived EVs. The data can be downloaded <a href=https://drive.google.com/uc?export=download&id=1K_VFE3pWXq561MOyFT8MeiK3OGhB_s4->here</a>.
+For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived EVs. The data can be downloaded here.
 
 ```{r}
 library(Cygnus)
@@ -10,5 +10,5 @@ library(Cygnus)
 
 ```{r}
 data.path <- "../vignettes/KP1.9_Threshold.csv" 
-cyg <- createCygnus(data.path)
+#cyg <- createCygnus(data.path)
 ```
