@@ -8,7 +8,7 @@ Description: This package provides an analysis framework to analyze single-EV im
 License: MIT
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/yeinchung/Cygnus
+URL: https://github.com/yeinchung/Cygnus, https://yeinchung.github.io/Cygnus/
 BugReports: https://github.com/yeinchung/Cygnus/issues
 Imports:
   ggplot2,
