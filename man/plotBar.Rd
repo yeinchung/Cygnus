@@ -2,10 +2,22 @@
 % Please edit documentation in R/downstream.R
 \name{plotBar}
 \alias{plotBar}
-\title{Visualize Proportions}
+\title{Visualize Proportions in Bar Plot}
 \usage{
 plotBar(data, color_by = NULL, split_by = NULL)
 }
+\arguments{
+\item{data}{A Cygnus object containing EV metadata and matrices.}
+
+\item{color_by}{A column name from the EV metadata to use for coloring the proportions in the plot. This defines the different groups/colors in the bar plot.}
+
+\item{split_by}{A column name from the EV metadata that defines how to group the data on the x-axis.}
+}
+\value{
+A ggplot2 object representing the bar plot of proportions.
+}
 \description{
-Visualize Proportions
+This function creates a bar plot to visualize the proportions of a specified
+group within the data. The bars are colored according to a specified metadata
+column and can be grouped by another metadata column.
 }

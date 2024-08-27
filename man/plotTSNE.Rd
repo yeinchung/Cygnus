@@ -4,7 +4,7 @@
 \alias{plotTSNE}
 \title{Visualize t-SNE Results}
 \usage{
-plotTSNE(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ...)
+plotTSNE(data, plot_3d = FALSE, color_by = NULL, marker_size = 1)
 }
 \arguments{
 \item{data}{An object of class \code{CygnusObject} containing t-SNE results.}

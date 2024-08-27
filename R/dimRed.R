@@ -286,7 +286,7 @@ plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
 #' @param marker_size Numeric value specifying the size of the markers in the plot. Default is 1.
 #' @return A plot of the t-SNE results.
 #' @export
-plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ...) {
+plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
   if (!"tSNE" %in% names(data@dim_red)) {
     stop("t-SNE results not found. Run t-SNE first.")
   }

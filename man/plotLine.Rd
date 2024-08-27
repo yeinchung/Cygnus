@@ -2,7 +2,7 @@
 % Please edit documentation in R/downstream.R
 \name{plotLine}
 \alias{plotLine}
-\title{Visualize Linegraph}
+\title{Visualize Average Expression as a Line Graph}
 \usage{
 plotLine(
   data,
@@ -13,6 +13,24 @@ plotLine(
   order_x_axis = NULL
 )
 }
+\arguments{
+\item{data}{A Cygnus object containing EV metadata and matrices.}
+
+\item{x_axis}{A column name from the EV metadata to use for the x-axis. This column should define the groups for the line plot.}
+
+\item{plot_markers}{A vector of marker names to plot. If set to "ALL", all markers will be included in the plot. Default is "ALL".}
+
+\item{fold_change}{Logical; if TRUE, the fold change will be calculated for the markers. Default is TRUE.}
+
+\item{matrix_name}{The name of the matrix within the Cygnus object to use for the plot. Default is "Raw_Score".}
+
+\item{order_x_axis}{A vector specifying the order of levels for the x-axis. If NULL, the default order will be used. Default is NULL.}
+}
+\value{
+A ggplot2 object representing the line plot of average expression values.
+}
 \description{
-Makes sense for temporal data!
+This function generates a line plot to visualize the average expression of specified markers
+across different groups. The x-axis represents the groups defined by a metadata column,
+and the y-axis shows the mean expression values for each marker.
 }

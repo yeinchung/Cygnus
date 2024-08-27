@@ -182,7 +182,6 @@ markRelevantMarkers <- function(data, relevant_markers = NULL) {
 #' The markers_meta must be a data frame with a 'marker' column. The function adds a 'relevant' list.
 #'
 #' @param data An object of class \code{CygnusObject}.
-#' @param relevant_markers A character vector of marker names to be marked as relevant. If NULL, no markers are marked as relevant.
 #' @return The updated \code{CygnusObject} with relevant markers marked.
 #' @export
 markRelevantMarkersUI <- function(data) {

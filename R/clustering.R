@@ -1,4 +1,4 @@
-#' CygnusCluster: Perform Clustering on Dimensionality Reduced Data
+#' Perform Clustering on Dimensionality Reduced Data
 #'
 #' Clusters data in the `CygnusObject` using specified dimensionality reduction techniques and K-means clustering.
 #' The function updates the `CygnusObject` with the resulting cluster assignments.

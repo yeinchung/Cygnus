@@ -8,8 +8,6 @@ markRelevantMarkersUI(data)
 }
 \arguments{
 \item{data}{An object of class \code{CygnusObject}.}
-
-\item{relevant_markers}{A character vector of marker names to be marked as relevant. If NULL, no markers are marked as relevant.}
 }
 \value{
 The updated \code{CygnusObject} with relevant markers marked.
