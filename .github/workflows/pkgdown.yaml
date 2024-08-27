@@ -52,3 +52,5 @@ jobs:
 template:
   bootstrap: 5
   light-switch: true
+
+url: https://yeinchung.github.io/Cygnus/
