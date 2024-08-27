@@ -1,15 +1,15 @@
-<p align="center"><img src="figures/image.png" alt="" width="350"></a></p>
+<p align="center"><img src="man/figures/image.png" alt="" width="350"></a></p>
 <hr>
 
 ### Cygnus Version 0.1.0
 
 **Single EV Imaging Data Analysis and Visualization Pipeline**
 
-Cygnus offers data analysis tool for ___. 
+Cygnus offers customizable and interactive workflow for single EV analysis with multiplexing (SEAM) 
 
 <hr>
 
-# Quick Installation of Cygnus
+## Quick Installation of Cygnus
 
 **First, install devtools (for installing GitHub packages) if it isn't already installed:**
 ``` r
@@ -25,8 +25,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
+<hr>
 
-# Issues using Cygnus?
+## Issues using Cygnus?
 
 Cygnus is currently in __beta__. If you think you have found a bug, please first install the latest version of Cygnus via
 ``` r

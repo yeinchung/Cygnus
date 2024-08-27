@@ -113,9 +113,12 @@ CreateCygnus <- function(data.path, markers_col = NULL, meta_col = NULL) {
 
   data <- read.csv(data.path)
 
+  matrices <- list('Raw_Score' = as.data.frame(data[markers_col]))
+  ev_meta <- as.list(data[meta_col])
+
   obj <- new("CygnusObject",
-             matrices = list('Raw_Score' = data[markers_col]),
-             ev_meta = data[meta_col],
+             matrices = matrices,
+             ev_meta = ev_meta,
              markers_meta = list(),
              marker_analysis = NULL,
              dim_red = list())
