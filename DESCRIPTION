@@ -4,8 +4,7 @@ Title: Cyber Gateway to Nanovesicles Underlying Signatures
 Version: 0.1.0
 Author: Yein Chung
 Maintainer: Yein Chung <yeinchung04@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package provides an analysis framework to analyze single-EV imaging data. 
 License: MIT
 Encoding: UTF-8
 LazyData: true
@@ -25,5 +24,8 @@ Imports:
   uwot, 
   shiny,
   plotly,
-  tidyr
+  tidyr,
+  UpSetR,
+  stats,
+  grDevices
 RoxygenNote: 7.3.2

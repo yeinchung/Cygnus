@@ -167,7 +167,7 @@ plotElbowPlot <- function(data, ...) {
   }
 
   pca_coordinates <- data@dim_red$PCA
-  pca_variance <- apply(pca_coordinates, 2, var)
+  pca_variance <- apply(pca_coordinates, 2, stats::var)
 
   plot(pca_variance, type = "b", pch = 19, xlab = "Principal Component", ylab = "Variance Explained",
        main = "Elbow Plot of Principal Components", ...)

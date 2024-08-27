@@ -44,8 +44,3 @@ The function performs the following steps:
 4. Uses the reduced dimensions for K-means clustering to assign each sample to a cluster.
 5. Stores the cluster assignments in the `ev_meta` slot of the `CygnusObject`.
 }
-\examples{
-# Assuming CygnusObject is already created and contains the relevant data
-CygnusObject <- CygnusCluster(CygnusObject, use.dims = "PCA", n_clusters = 5)
-
-}

@@ -1,4 +1,6 @@
 exportPattern("^[[:alpha:]]+")
-
 importFrom("methods", "new")
 importFrom("utils", "read.csv")
+importFrom("grDevices", "colorRampPalette")
+importFrom("graphics", "hist", "legend", "par")
+importFrom("stats", "kmeans", "prcomp", "setNames", "var")

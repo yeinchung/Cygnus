@@ -36,8 +36,8 @@ plotDistribution <- function(
     stop("No markers to plot.")
   }
 
-  par(mfrow = c(num_rows, min(3, num_cols)))
-  par(mar = c(2, 2, 2, 1))
+  graphics::par(mfrow = c(num_rows, min(3, num_cols)))
+  graphics::par(mar = c(2, 2, 2, 1))
 
   for (marker in plot_markers) {
     hist(matrix_data[, marker], breaks = 1000,
@@ -45,7 +45,7 @@ plotDistribution <- function(
          xlab = "", ylab = "")
   }
 
-  par(mfrow = c(1, 1))
+  graphics::par(mfrow = c(1, 1))
 }
 
 #' Plot Average Expression Heatmap by Group
@@ -62,10 +62,13 @@ plotDistribution <- function(
 #' @param cluster_rows Logical value indicating whether to cluster rows in the heatmap. Default is FALSE.
 #' @param na.rm Logical value indicating whether to remove NA values before calculating averages. Default is TRUE.
 #' @return A heatmap plot showing average marker expressions grouped by the specified metadata column.
+#'
+#' @importFrom dplyr %>%
+#'
 #' @export
 plotAvgHeatmap <- function(data, group_column,
                            clustering_distance = "euclidean",
-                           colors = rev(colorRampPalette(RColorBrewer::brewer.pal(n = 11, "RdYlBu"))(100)),
+                           colors = rev(grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 11, "RdYlBu"))(100)),
                            fontsize = 8,
                            scale = 'column',
                            cluster_rows = FALSE,
@@ -78,7 +81,7 @@ plotAvgHeatmap <- function(data, group_column,
 
   avg_marker_expressions <- combined_data %>%
     dplyr::group_by(group_metadata) %>%
-    dplyr::summarise(across(everything(), mean, na.rm = na.rm)) %>%
+    dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = na.rm)) %>%
     dplyr::select(-group_metadata) %>%
     as.matrix()
 
@@ -162,7 +165,7 @@ markRelevantMarkers <- function(data, relevant_markers = NULL) {
   data@markers_meta[['marker']] <- colnames(data@matrices$Raw_Score)
 
   names_vector <- colnames(data@matrices$Raw_Score)
-  data@markers_meta[['relevant']] <- setNames(rep(FALSE, length(names_vector)), names_vector)
+  data@markers_meta[['relevant']] <- stats::setNames(rep(FALSE, length(names_vector)), names_vector)
 
   for(marker in colnames(data@matrices$Raw_Score)) {
     if(marker %in% relevant_markers) {
@@ -210,7 +213,7 @@ markRelevantMarkersUI <- function(data) {
 
         updated_meta <- markers_meta()
         names_vector <- colnames(data@matrices$Raw_Score)
-        updated_meta[['relevant']] <- setNames(rep(FALSE, length(names_vector)), names_vector)
+        updated_meta[['relevant']] <- stats::setNames(rep(FALSE, length(names_vector)), names_vector)
 
         for (marker in input$relevant_markers) {
           updated_meta[['relevant']][marker] <- TRUE

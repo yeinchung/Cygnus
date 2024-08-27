@@ -1,6 +1,6 @@
 #' CygnusCluster: Perform Clustering on Dimensionality Reduced Data
 #'
-#' The `CygnusCluster` function clusters data in the `CygnusObject` using specified dimensionality reduction techniques and K-means clustering.
+#' Clusters data in the `CygnusObject` using specified dimensionality reduction techniques and K-means clustering.
 #' The function updates the `CygnusObject` with the resulting cluster assignments.
 #'
 #' @param CygnusObject A `CygnusObject` containing the data matrices and metadata for analysis.
@@ -23,12 +23,8 @@
 #' 4. Uses the reduced dimensions for K-means clustering to assign each sample to a cluster.
 #' 5. Stores the cluster assignments in the `ev_meta` slot of the `CygnusObject`.
 #'
-#' @examples
-#' # Assuming CygnusObject is already created and contains the relevant data
-#' CygnusObject <- CygnusCluster(CygnusObject, use.dims = "PCA", n_clusters = 5)
-#'
 #' @export
-CygnusCluster <- function(CygnusObject,
+ClusterCygnus <- function(CygnusObject,
                           use.dims = "PCA",
                           use.markers = TRUE,
                           relevant_markers = TRUE,
@@ -60,7 +56,7 @@ CygnusCluster <- function(CygnusObject,
 
   clustering <- kmeans(dim_reduction, centers = n_clusters)$cluster
 
-  CygnusObject@ev_meta$clusters <- clustering
+  CygnusObject@ev_meta$k_means_clusters <- clustering
 
   return(CygnusObject)
 }
