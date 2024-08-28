@@ -320,10 +320,10 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
     }
   } else {
     if (!is.null(plot_data$color)) {
-      plot(plot_data$V1, plot_data$V2, col = plot_data$color, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size, ...)
+      plot(plot_data$V1, plot_data$V2, col = plot_data$color, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size)
       legend("topright", legend = levels(plot_data$meta), fill = unique(plot_data$color), title = color_by, cex = 0.8)
     } else {
-      plot(plot_data$V1, plot_data$V2, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size, ...)
+      plot(plot_data$V1, plot_data$V2, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size)
     }
   }
 }
