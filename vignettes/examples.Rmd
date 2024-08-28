@@ -49,5 +49,5 @@ plotDistribution(cyg, matrix = "scaled_exp_matrix")
 \n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered.
 
 ```{r}
-cyg <- normalizeByPanEV(cyg, "PanEV")
+#cyg <- normalizeByPanEV(cyg, "PanEV")
 ```
