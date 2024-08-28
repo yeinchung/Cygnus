@@ -1,6 +1,4 @@
 ---
-author: "Name Surname"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::knitr}
@@ -41,16 +39,15 @@ Currently, the object has one matrix, "Raw_Score", which is the default matrix t
 plotDistribution(cyg)
 ```
 
-From the above distribution, you can see that the range of intensities of markers differ. Sometimes this difference arises from differences in antibody affinity, rather than reflecting a meaningful biological signal. Therefore, we offer an optional function that creates another layer to scale the expressions.
+\n From the above distribution, you can see that the range of intensities of markers differ. Sometimes this difference arises from differences in antibody affinity, rather than reflecting a meaningful biological signal. Therefore, we offer an optional function that creates another layer to scale the expressions.
 
 ```{r}
 cyg <- scaleExpressionMatrix(cyg)
 plotDistribution(cyg, matrix = "scaled_exp_matrix")
 ```
 
-PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered. 
+\n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered.
 
 ```{r}
 cyg <- normalizeByPanEV(cyg, "PanEV")
 ```
-
