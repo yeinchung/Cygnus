@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   examples: examples.html
-last_built: 2024-08-27T21:06Z
+last_built: 2024-08-28T15:06Z
 urls:
   reference: https://yeinchung.github.io/Cygnus/reference
   article: https://yeinchung.github.io/Cygnus/articles
