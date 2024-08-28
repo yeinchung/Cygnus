@@ -1,27 +1,26 @@
 url: https://yeinchung.github.io/Cygnus/
 template:
   bootstrap: 5
-  light-switch: true
-
+  light-switch: yes
 navbar:
   type: inverse
   left:
-    - icon: fa-home
-      href: index.html
-    - text: "Guided Tutorial"
-      href: articles/examples.html
-    - text: "Full Manual"
-      menu:
-      -  text: Data Input and Output
-         href: articles/data_in_out.html
-      -  text: Marker Intensity Distribution Modifications
-         href: articles/marker_dist.html
-      -  text: Marker Colocalization and Correlation
-         href: articles/marker_co.html
-      -  text: Dimensionality Reduction
-         href: articles/dim_red.html
-      -  text: EV Heterogeneity
-         href: articles/clustering.html
-      -  text: On-demand Report Generation
-         href: articles/make_report.html
+  - icon: fa-home
+    href: index.html
+  - text: Guided Tutorial
+    href: articles/examples.html
+  - text: Full Manual
+    menu:
+    - text: Data Input and Output
+      href: articles/data_in_out.html
+    - text: Marker Intensity Distribution Modifications
+      href: articles/marker_dist.html
+    - text: Marker Colocalization and Correlation
+      href: articles/marker_co.html
+    - text: Dimensionality Reduction
+      href: articles/dim_red.html
+    - text: EV Heterogeneity
+      href: articles/clustering.html
+    - text: On-demand Report Generation
+      href: articles/make_report.html
 

@@ -27,5 +27,9 @@ Imports:
   tidyr,
   UpSetR,
   stats,
-  grDevices
+  grDevices,
+  knitr,
+  markdown
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr
+

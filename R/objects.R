@@ -105,7 +105,7 @@ specifyColumns <- function(data.path) {
 #' @return An object of class \code{CygnusObject}.
 #' @export
 CreateCygnus <- function(data.path, markers_col = NULL, meta_col = NULL) {
-  if (is.null(markers_col) || is.null(meta_col)) {
+  if (is.null(markers_col) && is.null(meta_col)) {
     cols <- specifyColumns(data.path)
     markers_col <- cols$markers_col
     meta_col <- cols$meta_col

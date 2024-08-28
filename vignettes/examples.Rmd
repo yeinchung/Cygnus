@@ -1,4 +1,14 @@
-# Cygnus Example Analysis - A Quick Tutorial
+---
+author: "Name Surname"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Cygnus Example Analysis - A Quick Tutorial}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+## Cygnus Example Analysis - A Quick Tutorial
 
 This tutorial covers reading a processed input file from AIVIA to generating an example report and 3D plot formats required interactive data visualization. The instructions for package installation can be found <a href=https://yeinchung.github.io/Cygnus/>here</a>.
 
@@ -8,7 +18,34 @@ For the purpose of this tutorial, we will be using an example data from KP1.9 ce
 library(Cygnus)
 ```
 
+Creating Cygnus object requires the user to specify metadata and markers column from the input .csv file. This can be done through an interactive Shiny App. 
+
 ```{r}
-data.path <- "../vignettes/KP1.9_Threshold.csv" 
-#cyg <- createCygnus(data.path)
+data.path <- "../inst/extdata/KP1.9_Raw.csv" 
+# cyg <- CreateCygnus(data.path) # this starts the interactive app
+
+cyg <- CreateCygnus(data.path,
+                    markers_col = c("CD63", "PanEV", "EpCAM", "CD9", "SDC1", 
+                                    "EGFR", "PDL1", "MET", "CD81", "HER2", 
+                                    "ADAM10", "CTSH"),
+                    meta_col = NULL)
+
+cyg
 ```
+
+Cygnus allows iterative analysis, where the results from each step of analysis is stored in the same object. This is useful for convenient sharing the data between researchers and will be used for generating the final report file as well. 
+
+Currently, the object has one matrix, "Raw_Score", which is the default matrix that stores the initial input matrix of the CygnusObject. The object contains 755 EVs. Note that Cygnus consists of scalable steps of analysis, and can run with samples with >10,000 EVs.  
+
+```{r}
+plotDistribution(cyg)
+```
+From the above distribution, you can see that the range of intensities of markers differ.
+Sometimes this difference arises from differences in antibody affinity, rather than reflecting a meaningful biological signal. Therefore, we offer an optional function that creates another layer to scale the expressions. 
+
+```{r}
+cyg <- scaleExpressionMatrix(cyg)
+plotDistribution(cyg, matrix = "scaled_exp_matrix")
+```
+
+PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. In order to normalize 
