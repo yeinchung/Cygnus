@@ -46,13 +46,15 @@ runPCA <- function(data, matrix_name = "Raw_Score", num_components = 50, use_rel
 #' @param data An object of class \code{CygnusObject} containing an expression matrix.
 #' @param matrix_name Character string specifying the name of the matrix to use. Default is "Raw_Score".
 #' @param use_relevant Logical indicating whether to use only relevant markers. Default is TRUE.
+#' @param n_pcs Number of principal components. Used only when use_pcs = TRUE. Default is 5.
 #' @param dims Numeric value specifying the number of dimensions for t-SNE. Default is 2.
 #' @param use_pcs Logical indicating whether to use PCA results as input. Default is FALSE.
 #' @param seed Numeric value for setting a random seed. Default is 42.
 #' @param ... Additional arguments to pass to the Rtsne function.
 #' @return The updated CygnusObject with t-SNE coordinates stored in the 'dim_red' slot.
 #' @export
-runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims = 2, use_pcs = FALSE, seed = 42, ...) {
+runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE,
+                    n_pcs = 5, dims = 2, use_pcs = FALSE, seed = 42, ...) {
   if (!(matrix_name %in% names(data@matrices))) {
     stop(paste("Matrix", matrix_name, "not found in CygnusObject"))
   }
@@ -72,14 +74,14 @@ runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
   }
 
   if (use_pcs) {
-    expression_matrix <- data@dim_red$PCA
+    expression_matrix <- data@dim_red$PCA[, 1:n_pcs]
   }
 
   if (nrow(expression_matrix) == 0 || ncol(expression_matrix) == 0) {
     stop("The expression matrix has zero rows or columns.")
   }
 
-  # Set the random seed for reproducibility
+  # set the random seed for reproducibility!
   set.seed(seed)
 
   tsne_result <- tryCatch(
@@ -104,6 +106,7 @@ runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
 #' @param use_relevant Logical indicating whether to use only relevant markers. Default is TRUE.
 #' @param dims Numeric value specifying the number of dimensions for UMAP. Default is 2.
 #' @param use_pcs Logical indicating whether to use PCA results as input. Default is FALSE.
+#' @param n_pcs Number of principal components. Used only when use_pcs = TRUE. Default is 5.
 #' @param n_neighbors Numeric value specifying the number of neighbors for UMAP. Default is 30.
 #' @param min_dist Numeric value specifying the minimum distance for UMAP. Default is 0.3.
 #' @param verbose Logical value indicating whether to display a progress bar. Default is TRUE.
@@ -111,7 +114,7 @@ runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
 #' @return The updated CygnusObject with UMAP coordinates stored in the 'dim_red' slot.
 #' @export
 runUMAP <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims = 3, use_pcs = FALSE,
-                    n_neighbors = 30, min_dist = 0.3, verbose = TRUE, ...) {
+                    n_pcs = 5, n_neighbors = 30, min_dist = 0.3, verbose = TRUE, ...) {
   if (!(matrix_name %in% names(data@matrices))) {
     stop(paste("Matrix", matrix_name, "not found in CygnusObject"))
   }
@@ -131,7 +134,7 @@ runUMAP <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE, dims =
   }
 
   if (use_pcs) {
-    expression_matrix <- data@dim_red$PCA
+    expression_matrix <- data@dim_red$PCA[,1:n_pcs]
   }
 
   if (nrow(expression_matrix) == 0 || ncol(expression_matrix) == 0) {
@@ -271,9 +274,10 @@ plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
     }
   } else {
     if (!is.null(plot_data$color)) {
-      plot(plot_data$V1, plot_data$V2, col = plot_data$color, xlab = "UMAP1", ylab = "UMAP2", main = "UMAP", pch = 16, cex = marker_size)
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, color = ~meta, type = 'scatter', mode = 'markers', marker = list(size = marker_size))
+
     } else {
-      plot(plot_data$V1, plot_data$V2, xlab = "UMAP1", ylab = "UMAP2", main = "UMAP", pch = 16, cex = marker_size)
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2,type = 'scatter', mode = 'markers', marker = list(size = marker_size))
     }
   }
 }
@@ -286,7 +290,8 @@ plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
 #' @param marker_size Numeric value specifying the size of the markers in the plot. Default is 1.
 #' @return A plot of the t-SNE results!
 #' @export
-plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
+plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1,
+                     use, matrix_name = "Raw_Score") {
   if (!"tSNE" %in% names(data@dim_red)) {
     stop("t-SNE results not found. Run t-SNE first.")
   }
@@ -307,8 +312,21 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
       color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set1")
       plot_data$color <- color_palette[plot_data$meta]
     }
-  } else if (!is.null(color_by)) {
-    warning(paste("Metadata column", color_by, "not found. Plotting without color."))
+  }
+
+  if(!is.null(color_by) && color_by %in% colnames(data@matrices[[matrix_name]])){
+    plot_data$meta <- data@matrices[[matrix_name]][[color_by]]
+
+    viridis_colors <- viridis(1000)
+    magma_colors <- magma(1000)
+    normalized_values <- (values - min(values)) / (max(values) - min(values))
+    viridis_mapped_colors <- viridis_colors[as.numeric(cut(normalized_values, breaks = length(viridis_colors)))]
+    magma_mapped_colors <- magma_colors[as.numeric(cut(normalized_values, breaks = length(magma_colors)))]
+
+    plot_data$color <- magma_mapped_colors
+
+  }else if (!is.null(color_by)) {
+    warning(paste("Metadata or gene name column", color_by, "not found. Plotting without color."))
   }
 
   if (plot_3d && ncol(tsne_coords) >= 3) {
@@ -320,10 +338,10 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
     }
   } else {
     if (!is.null(plot_data$color)) {
-      plot(plot_data$V1, plot_data$V2, col = plot_data$color, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size)
-      legend("topright", legend = levels(plot_data$meta), fill = unique(plot_data$color), title = color_by, cex = 0.8)
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, color = ~meta, type = 'scatter', mode = 'markers', marker = list(size = marker_size)) %>%
+        plotly::layout(legend = list(title = list(text = color_by)))
     } else {
-      plot(plot_data$V1, plot_data$V2, xlab = "t-SNE1", ylab = "t-SNE2", main = "t-SNE", pch = 16, cex = marker_size)
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, type = 'scatter', mode = 'markers', marker = list(size = marker_size))
     }
   }
 }

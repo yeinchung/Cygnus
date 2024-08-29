@@ -56,7 +56,7 @@ ClusterCygnus <- function(CygnusObject,
 
   clustering <- kmeans(dim_reduction, centers = n_clusters)$cluster
 
-  CygnusObject@ev_meta$k_means_clusters <- clustering
+  CygnusObject@ev_meta[['k_means_clusters']] <- clustering
 
   return(CygnusObject)
 }
