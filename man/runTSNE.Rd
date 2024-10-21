@@ -8,6 +8,7 @@ runTSNE(
   data,
   matrix_name = "Raw_Score",
   use_relevant = TRUE,
+  n_pcs = 5,
   dims = 2,
   use_pcs = FALSE,
   seed = 42,
@@ -20,6 +21,8 @@ runTSNE(
 \item{matrix_name}{Character string specifying the name of the matrix to use. Default is "Raw_Score".}
 
 \item{use_relevant}{Logical indicating whether to use only relevant markers. Default is TRUE.}
+
+\item{n_pcs}{Number of principal components. Used only when use_pcs = TRUE. Default is 5.}
 
 \item{dims}{Numeric value specifying the number of dimensions for t-SNE. Default is 2.}
 

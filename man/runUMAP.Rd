@@ -10,6 +10,7 @@ runUMAP(
   use_relevant = TRUE,
   dims = 3,
   use_pcs = FALSE,
+  n_pcs = 5,
   n_neighbors = 30,
   min_dist = 0.3,
   verbose = TRUE,
@@ -26,6 +27,8 @@ runUMAP(
 \item{dims}{Numeric value specifying the number of dimensions for UMAP. Default is 2.}
 
 \item{use_pcs}{Logical indicating whether to use PCA results as input. Default is FALSE.}
+
+\item{n_pcs}{Number of principal components. Used only when use_pcs = TRUE. Default is 5.}
 
 \item{n_neighbors}{Numeric value specifying the number of neighbors for UMAP. Default is 30.}
 

@@ -351,3 +351,22 @@ normalizeByPanEV <- function(data, pan_ev_marker) {
 
   return(data)
 }
+
+
+#' Add IgG distribution
+#'
+#' @param data An object of class \code{CygnusObject}
+#' @param IgG A vector for IgG distribution
+#' @param name A string specifying the name of IgG distribution to be saved in \code{CygnusObject}
+#'
+#' @return The updated CygnusObject with IgG distribution added
+#' @export
+addIgG <- function(data, IgG, name){
+  data@marker_analysis <- list()
+  data@marker_analysis[['name']] <- IgG
+
+  hist(IgG, main=paste0(name, "distribution"))
+
+  return(data)
+}
+
