@@ -82,11 +82,12 @@
 <h2 id="cygnus-example-analysis---a-quick-tutorial">Cygnus Example Analysis - A Quick Tutorial<a class="anchor" aria-label="anchor" href="#cygnus-example-analysis---a-quick-tutorial"></a>
 </h2>
 <p>This tutorial covers reading a processed input file from AIVIA to
-generating an example report and 3D plot formats required interactive
-data visualization. The instructions for package installation can be
-found <a href="https://yeinchung.github.io/Cygnus/">here</a>.</p>
+generate an example report and 3D plots required for interactive data
+visualization. The instructions for package installation can be found
+<a href="https://yeinchung.github.io/Cygnus/">here</a>.</p>
 <p>For the purpose of this tutorial, we will be using an example data
-from KP1.9 cell line derived EVs. The data can be downloaded here.</p>
+from KP1.9 cell line derived extracellular vesicle imaging data. The
+data can be downloaded here.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yeinchung/Cygnus" class="external-link">Cygnus</a></span><span class="op">)</span></span></code></pre></div>
 <p>Creating Cygnus object requires the user to specify metadata and
@@ -107,13 +108,12 @@ interactive Shiny App.</p>
 <span><span class="co">## Slot: [1] "Raw_Score"</span></span>
 <span><span class="co">## Numer of EVs: [1] 755</span></span></code></pre>
 <p>Cygnus allows iterative analysis, where the results from each step of
-analysis is stored in the same object. This is useful for convenient
-sharing the data between researchers and will be used for generating the
-final report file as well.</p>
+analysis is stored in the same object. This is especially useful for
+data sharing.</p>
 <p>Currently, the object has one matrix, “Raw_Score”, which is the
 default matrix that stores the initial input matrix of the CygnusObject.
-The object contains 755 EVs. Note that Cygnus consists of scalable steps
-of analysis, and can run with samples with &gt;10,000 EVs.</p>
+The object contains 755 EVs. Please note that Cygnus is a scalable
+workflow, and can run with samples with &gt;10,000 EVs.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotDistribution.html">plotDistribution</a></span><span class="op">(</span><span class="va">cyg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="examples_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
@@ -143,7 +143,7 @@ with greater size aggregating together when clustered.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
