@@ -107,6 +107,10 @@ interactive Shiny App.</p>
 <pre><code><span><span class="co">## Summary of CygnusObject:</span></span>
 <span><span class="co">## Slot: [1] "Raw_Score"</span></span>
 <span><span class="co">## Numer of EVs: [1] 755</span></span></code></pre>
+<p>If any metadata from another file need to be added, you can do so
+with the following code:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cyg</span><span class="op">@</span><span class="va">ev_meta</span><span class="op">[[</span><span class="st">'CellLine'</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"KP1.9"</span></span></code></pre></div>
 <p>Cygnus allows iterative analysis, where the results from each step of
 analysis is stored in the same object. This is especially useful for
 data sharing.</p>
@@ -114,24 +118,34 @@ data sharing.</p>
 default matrix that stores the initial input matrix of the CygnusObject.
 The object contains 755 EVs. Please note that Cygnus is a scalable
 workflow, and can run with samples with &gt;10,000 EVs.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotDistribution.html">plotDistribution</a></span><span class="op">(</span><span class="va">cyg</span><span class="op">)</span></span></code></pre></div>
-<p><img src="examples_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="examples_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>From the above distribution, you can see that the range of
 intensities of markers differ. Sometimes this difference arises from
 differences in antibody affinity, rather than reflecting a meaningful
 biological signal. Therefore, we offer an optional function that creates
 another layer to scale the expressions.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scaleExpressionMatrix.html">scaleExpressionMatrix</a></span><span class="op">(</span><span class="va">cyg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotDistribution.html">plotDistribution</a></span><span class="op">(</span><span class="va">cyg</span>, matrix <span class="op">=</span> <span class="st">"scaled_exp_matrix"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="examples_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="examples_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>PanEV is used to localize EVs in the original imaging data, and is
 generally not useful for biological interpretation. However, EVs with
 greater PanEV expression may be larger in size. This can lead to EVs
-with greater size aggregating together when clustered.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#cyg &lt;- normalizeByPanEV(cyg, "PanEV")</span></span></code></pre></div>
+with greater size aggregating together when clustered. This function
+also adds a new matrix to the object, which can be viewed with
+<em>names(<a href="mailto:cyg@matrices" class="email">cyg@matrices</a>)</em>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#cyg &lt;- normalizeByPanEV(cyg, "PanEV") </span></span></code></pre></div>
+<p>Another normalization method uses the distribution of IgG (isotype
+control). This can be done with an interactive Shiny app.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># NEED TO BE UPDATED</span></span></code></pre></div>
+<p><strong>Description of average heatmap</strong></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotAvgHeatmap.html">plotAvgHeatmap</a></span><span class="op">(</span><span class="va">cyg</span>, <span class="st">"CellLine"</span>, scale <span class="op">=</span> <span class="st">"row"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="examples_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
   </main>
 </div>
