@@ -31,6 +31,11 @@ cyg <- CreateCygnus(data.path,
 cyg
 ```
 
+If any metadata from another file need to be added, you can do so with the following code: 
+```{r}
+cyg@ev_meta[['CellLine']] <- "KP1.9"
+```
+
 Cygnus allows iterative analysis, where the results from each step of analysis is stored in the same object. This is especially useful for data sharing.
 
 Currently, the object has one matrix, "Raw_Score", which is the default matrix that stores the initial input matrix of the CygnusObject. The object contains 755 EVs. Please note that Cygnus is a scalable workflow, and can run with samples with \>10,000 EVs.
@@ -46,8 +51,19 @@ cyg <- scaleExpressionMatrix(cyg)
 plotDistribution(cyg, matrix = "scaled_exp_matrix")
 ```
 
-\n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered.
+\n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered. This function also adds a new matrix to the object, which can be viewed with *names(cyg@matrices)*.
 
 ```{r}
-#cyg <- normalizeByPanEV(cyg, "PanEV")
+#cyg <- normalizeByPanEV(cyg, "PanEV") 
 ```
+\n Another normalization method uses the distribution of IgG (isotype control). This can be done with an interactive Shiny app. 
+```{r}
+# NEED TO BE UPDATED
+```
+
+**Description of average heatmap**
+```{r}
+plotAvgHeatmap(cyg, "CellLine", scale = "row")
+```
+
+

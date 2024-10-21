@@ -29,7 +29,8 @@ Imports:
   stats,
   grDevices,
   knitr,
-  markdown
+  markdown,
+  magrittr
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 

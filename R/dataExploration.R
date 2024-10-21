@@ -78,7 +78,6 @@ plotAvgHeatmap <- function(data, group_column,
   group_metadata <- data@ev_meta[[group_column]]
 
   combined_data <- cbind(expression_matrix, group_metadata)
-
   avg_marker_expressions <- combined_data %>%
     dplyr::group_by(group_metadata) %>%
     dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = na.rm)) %>%
@@ -86,13 +85,14 @@ plotAvgHeatmap <- function(data, group_column,
     as.matrix()
 
   pheatmap::pheatmap(avg_marker_expressions,
-                     clustering_distance_cols = clustering_distance,
+                    # clustering_distance_cols = clustering_distance,
                      cluster_rows = cluster_rows,
                      color = colors,
                      main = paste("Average Marker Expressions by", group_column),
                      fontsize = fontsize,
                      scale = scale,
                      labels_row = unique(group_metadata))
+
 }
 
 #' Scale Expression Matrix by Maximum Value
@@ -333,7 +333,7 @@ selectThreshold <- function(
 #' @param pan_ev_marker Character string specifying the name of the pan-EV marker.
 #' @return The updated CygnusObject with normalized expression matrix.
 #' @export
-normalizeByPanEV <- function(data, pan_ev_marker) {
+nnormalizeByPanEV <- function(data, pan_ev_marker) {
   if (!(pan_ev_marker %in% colnames(data@matrices$Raw_Score))) {
     stop(paste("Pan-EV marker", pan_ev_marker, "not found in the expression matrix."))
   }
@@ -345,9 +345,13 @@ normalizeByPanEV <- function(data, pan_ev_marker) {
     warning("Pan-EV marker contains zero values. Normalization may lead to division by zero.")
   }
 
-  normalized_matrix <- sweep(expression_matrix, 1, pan_ev_values, FUN = "/")
+  normalized_matrix <- data.frame()
+  for(i in 1:nrow(data@matrices$Raw_Score)){
+    normalized_matrix[i, ] <- data@matrices$Raw_Score[i, ]/data@matrices$Raw_Score[i, pan_ev_marker]
+    print(normalized_matrix)
+  }
 
-  data@matrices$normalized_exp_mat <- normalized_matrix
+  data@matrices[['normalized_exp_mat']] <- normalized_matrix
 
   return(data)
 }
