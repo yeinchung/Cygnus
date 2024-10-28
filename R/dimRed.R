@@ -14,7 +14,7 @@ runPCA <- function(data, matrix_name = "Raw_Score", num_components = 50, use_rel
   expression_matrix <- data@matrices[[matrix_name]]
 
   if (use_relevant) {
-    data@markers_meta$marker <- colnames(test@matrices$Raw_Score)
+    data@markers_meta$marker <- colnames(data@matrices$Raw_Score)
     relevant_markers <- data@markers_meta$marker[data@markers_meta$relevant]
     if (length(relevant_markers) == 0) {
       stop("No relevant markers specified.")
@@ -290,7 +290,7 @@ plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
 #' @param marker_size Numeric value specifying the size of the markers in the plot. Default is 1.
 #' @return A plot of the t-SNE results!
 #' @export
-plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
+plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, matrix_name = "Raw_Score") {
   if (!"tSNE" %in% names(data@dim_red)) {
     stop("t-SNE results not found. Run t-SNE first.")
   }
@@ -318,7 +318,7 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
 
     viridis_colors <- viridis(1000)
     magma_colors <- magma(1000)
-    normalized_values <- (values - min(values)) / (max(values) - min(values))
+    normalized_values <- (plot_data$meta  - min(plot_data$meta )) / (max(plot_data$meta ) - min(plot_data$meta))
     viridis_mapped_colors <- viridis_colors[as.numeric(cut(normalized_values, breaks = length(viridis_colors)))]
     magma_mapped_colors <- magma_colors[as.numeric(cut(normalized_values, breaks = length(magma_colors)))]
 
