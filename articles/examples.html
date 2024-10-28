@@ -94,23 +94,23 @@ data can be downloaded here.</p>
 markers column from the input .csv file. This can be done through an
 interactive Shiny App.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data.path</span> <span class="op">&lt;-</span> <span class="st">"../inst/extdata/KP1.9_Raw.csv"</span> </span>
+<code class="sourceCode R"><span><span class="va">data.path</span> <span class="op">&lt;-</span> <span class="st">"../inst/extdata/all_cells.csv"</span> </span>
 <span><span class="co"># cyg &lt;- CreateCygnus(data.path) # this starts the interactive app</span></span>
 <span></span>
 <span><span class="va">cyg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateCygnus.html">CreateCygnus</a></span><span class="op">(</span><span class="va">data.path</span>,</span>
-<span>                    markers_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD63"</span>, <span class="st">"PanEV"</span>, <span class="st">"EpCAM"</span>, <span class="st">"CD9"</span>, <span class="st">"SDC1"</span>, </span>
-<span>                                    <span class="st">"EGFR"</span>, <span class="st">"PDL1"</span>, <span class="st">"MET"</span>, <span class="st">"CD81"</span>, <span class="st">"HER2"</span>, </span>
-<span>                                    <span class="st">"ADAM10"</span>, <span class="st">"CTSH"</span><span class="op">)</span>,</span>
-<span>                    meta_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span>                    markers_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PanEV"</span>, <span class="st">"EpCAM"</span>, <span class="st">"MET"</span>,</span>
+<span>                                    <span class="st">"SDC1"</span>, <span class="st">"EGFR"</span>, <span class="st">"ADAM10"</span>,</span>
+<span>                                    <span class="st">"CTSH"</span>, <span class="st">"PDL1"</span>, <span class="st">"HER2"</span> <span class="op">)</span>,</span>
+<span>                    meta_col <span class="op">=</span> <span class="st">"celltype"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cyg</span></span></code></pre></div>
 <pre><code><span><span class="co">## Summary of CygnusObject:</span></span>
 <span><span class="co">## Slot: [1] "Raw_Score"</span></span>
-<span><span class="co">## Numer of EVs: [1] 755</span></span></code></pre>
+<span><span class="co">## Numer of EVs: [1] 3264</span></span></code></pre>
 <p>If any metadata from another file need to be added, you can do so
 with the following code:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cyg</span><span class="op">@</span><span class="va">ev_meta</span><span class="op">[[</span><span class="st">'CellLine'</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"KP1.9"</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cyg</span><span class="op">@</span><span class="va">ev_meta</span><span class="op">[[</span><span class="st">'type'</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"cell_line"</span></span></code></pre></div>
 <p>Cygnus allows iterative analysis, where the results from each step of
 analysis is stored in the same object. This is especially useful for
 data sharing.</p>
@@ -137,16 +137,20 @@ with greater size aggregating together when clustered. This function
 also adds a new matrix to the object, which can be viewed with
 <em>names(<a href="mailto:cyg@matrices" class="email">cyg@matrices</a>)</em>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#cyg &lt;- normalizeByPanEV(cyg, "PanEV") </span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cyg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/normalizeByPanEV.html">normalizeByPanEV</a></span><span class="op">(</span><span class="va">cyg</span>, <span class="st">"PanEV"</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="../reference/plotDistribution.html">plotDistribution</a></span><span class="op">(</span><span class="va">cyg</span>, matrix <span class="op">=</span> <span class="st">"normalized_exp_mat"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="examples_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>Another normalization method uses the distribution of IgG (isotype
 control). This can be done with an interactive Shiny app.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># NEED TO BE UPDATED</span></span></code></pre></div>
 <p><strong>Description of average heatmap</strong></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotAvgHeatmap.html">plotAvgHeatmap</a></span><span class="op">(</span><span class="va">cyg</span>, <span class="st">"CellLine"</span>, scale <span class="op">=</span> <span class="st">"row"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="examples_files/figure-html/unnamed-chunk-8-1.png" width="700">
-### Marker Analysis</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotAvgHeatmap.html">plotAvgHeatmap</a></span><span class="op">(</span><span class="va">cyg</span>, <span class="st">"celltype"</span>, scale <span class="op">=</span> <span class="st">"row"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="examples_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<div class="section level3">
+<h3 id="marker-analysis">Marker Analysis<a class="anchor" aria-label="anchor" href="#marker-analysis"></a>
+</h3>
 <p><strong>ADD DESCRIPTIONS</strong></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># co localization (show venn and upset)</span></span></code></pre></div>
@@ -158,6 +162,7 @@ control). This can be done with an interactive Shiny app.</p>
 <code class="sourceCode R"><span><span class="co"># devience</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># upset plot</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="ev-analysis">EV Analysis<a class="anchor" aria-label="anchor" href="#ev-analysis"></a>
 </h3>
