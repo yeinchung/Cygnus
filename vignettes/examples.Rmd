@@ -10,7 +10,7 @@ vignette: >
 
 This tutorial covers reading a processed input file from AIVIA to generate an example report and 3D plots required for interactive data visualization. The instructions for package installation can be found <a href=https://yeinchung.github.io/Cygnus/>here</a>.
 
-For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived extracellular vesicle  imaging data. The data can be downloaded here.
+For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived extracellular vesicle imaging data. The data can be downloaded here.
 
 ```{r}
 library(Cygnus)
@@ -19,21 +19,22 @@ library(Cygnus)
 Creating Cygnus object requires the user to specify metadata and markers column from the input .csv file. This can be done through an interactive Shiny App.
 
 ```{r}
-data.path <- "../inst/extdata/KP1.9_Raw.csv" 
+data.path <- "../inst/extdata/all_cells.csv" 
 # cyg <- CreateCygnus(data.path) # this starts the interactive app
 
 cyg <- CreateCygnus(data.path,
-                    markers_col = c("CD63", "PanEV", "EpCAM", "CD9", "SDC1", 
-                                    "EGFR", "PDL1", "MET", "CD81", "HER2", 
-                                    "ADAM10", "CTSH"),
-                    meta_col = NULL)
+                    markers_col = c("PanEV", "EpCAM", "MET",
+                                    "SDC1", "EGFR", "ADAM10",
+                                    "CTSH", "PDL1", "HER2" ),
+                    meta_col = "celltype")
 
 cyg
 ```
 
-If any metadata from another file need to be added, you can do so with the following code: 
+If any metadata from another file need to be added, you can do so with the following code:
+
 ```{r}
-cyg@ev_meta[['CellLine']] <- "KP1.9"
+cyg@ev_meta[['type']] <- "cell_line"
 ```
 
 Cygnus allows iterative analysis, where the results from each step of analysis is stored in the same object. This is especially useful for data sharing.
@@ -51,20 +52,25 @@ cyg <- scaleExpressionMatrix(cyg)
 plotDistribution(cyg, matrix = "scaled_exp_matrix")
 ```
 
-\n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered. This function also adds a new matrix to the object, which can be viewed with *names(cyg@matrices)*.
+\n PanEV is used to localize EVs in the original imaging data, and is generally not useful for biological interpretation. However, EVs with greater PanEV expression may be larger in size. This can lead to EVs with greater size aggregating together when clustered. This function also adds a new matrix to the object, which can be viewed with *names([cyg\@matrices](mailto:cyg@matrices){.email})*.
 
 ```{r}
-#cyg <- normalizeByPanEV(cyg, "PanEV") 
+cyg <- normalizeByPanEV(cyg, "PanEV") 
+plotDistribution(cyg, matrix = "normalized_exp_mat")
 ```
-\n Another normalization method uses the distribution of IgG (isotype control). This can be done with an interactive Shiny app. 
+
+\n Another normalization method uses the distribution of IgG (isotype control). This can be done with an interactive Shiny app.
+
 ```{r}
 # NEED TO BE UPDATED
 ```
 
 **Description of average heatmap**
+
 ```{r}
-plotAvgHeatmap(cyg, "CellLine", scale = "row")
+plotAvgHeatmap(cyg, "celltype", scale = "row")
 ```
+
 ### Marker Analysis
 
 **ADD DESCRIPTIONS**
@@ -92,6 +98,7 @@ plotAvgHeatmap(cyg, "CellLine", scale = "row")
 ### EV Analysis
 
 **ADD DESCRIPTIONS**
+
 ```{r}
 # dimensionality reduction
 ## run PCA, view PCA, run tSNE view tSNE, same for UMAP
@@ -103,4 +110,3 @@ plotAvgHeatmap(cyg, "CellLine", scale = "row")
 # clustering 
 ## Just show one example
 ```
-

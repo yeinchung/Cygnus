@@ -333,28 +333,36 @@ selectThreshold <- function(
 #' @param pan_ev_marker Character string specifying the name of the pan-EV marker.
 #' @return The updated CygnusObject with normalized expression matrix.
 #' @export
-nnormalizeByPanEV <- function(data, pan_ev_marker) {
+normalizeByPanEV <- function(data, pan_ev_marker) {
   if (!(pan_ev_marker %in% colnames(data@matrices$Raw_Score))) {
     stop(paste("Pan-EV marker", pan_ev_marker, "not found in the expression matrix."))
   }
 
   expression_matrix <- data@matrices$Raw_Score
-  pan_ev_values <- expression_matrix[, pan_ev_marker, drop = FALSE]
+  pan_ev_values <- expression_matrix[[pan_ev_marker]]
 
   if (any(pan_ev_values == 0)) {
     warning("Pan-EV marker contains zero values. Normalization may lead to division by zero.")
   }
 
-  normalized_matrix <- data.frame()
-  for(i in 1:nrow(data@matrices$Raw_Score)){
-    normalized_matrix[i, ] <- data@matrices$Raw_Score[i, ]/data@matrices$Raw_Score[i, pan_ev_marker]
-    print(normalized_matrix)
+  # Initialize normalized_matrix as a data frame with the same dimensions and column names
+  normalized_matrix <- data.frame(matrix(NA, nrow = nrow(expression_matrix), ncol = ncol(expression_matrix)))
+  colnames(normalized_matrix) <- colnames(expression_matrix)
+  rownames(normalized_matrix) <- rownames(expression_matrix)
+
+  # Perform row-wise normalization
+  for (i in 1:nrow(expression_matrix)) {
+    normalized_matrix[i, ] <- as.numeric(expression_matrix[i, ]) / pan_ev_values[i]
   }
 
+  # Assign the normalized matrix to data@matrices
   data@matrices[['normalized_exp_mat']] <- normalized_matrix
 
   return(data)
 }
+
+
+
 
 
 #' Add IgG distribution
