@@ -313,8 +313,8 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
     }
   }
 
-  if(!is.null(color_by) && color_by %in% colnames(data@matrices[[matrix_name]])){
-    plot_data$meta <- data@matrices[[matrix_name]][[color_by]]
+  if(!is.null(color_by) && color_by %in% colnames(data@matrices[['Raw_Scores']])){
+    plot_data$meta <- data@matrices[['Raw_Scores']][[color_by]]
 
     viridis_colors <- viridis(1000)
     magma_colors <- magma(1000)
