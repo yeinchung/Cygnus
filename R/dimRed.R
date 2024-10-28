@@ -324,9 +324,9 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ma
 
     plot_data$color <- magma_mapped_colors
 
-  }else if (!is.null(color_by)) {
-    warning(paste("Metadata or gene name column", color_by, "not found. Plotting without color."))
-  }
+  }#else if (!is.null(color_by)) {
+   # warning(paste("Metadata or gene name column", color_by, "not found. Plotting without color."))
+  #}
 
   if (plot_3d && ncol(tsne_coords) >= 3) {
     if (!is.null(plot_data$color)) {

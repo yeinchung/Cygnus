@@ -14,6 +14,8 @@ For the purpose of this tutorial, we will be using an example data from KP1.9 ce
 
 ```{r}
 library(Cygnus)
+library(viridis)
+library(plotly)
 ```
 
 Creating Cygnus object requires the user to specify metadata and markers column from the input .csv file. This can be done through an interactive Shiny App.
@@ -125,7 +127,7 @@ plotElbowPlot(cyg)
 ```
 ```{r}
 cyg <- runTSNE(cyg)
-plotTSNE(cyg, color_by = "celltype", marker_size = 10)
+plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F, matrix_name = "Raw_Score")
 ```
 
 ```{r}
@@ -159,14 +161,3 @@ plotTSNE(cyg, color_by = 'celltype', marker_size = 10)
 ```
 
 
-```{r}
-# dimensionality reduction
-## run PCA, view PCA, run tSNE view tSNE, same for UMAP
-##  things to visualize during this... like variance plot for PCA, 
-## 2D and 3D plots (but no metadata? it can just be with feature expression)
-```
-
-```{r}
-# clustering 
-## Just show one example
-```
