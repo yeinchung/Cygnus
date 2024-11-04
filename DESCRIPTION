@@ -30,7 +30,9 @@ Imports:
   grDevices,
   knitr,
   markdown,
-  magrittr
+  magrittr, 
+  viridis,
+  webshot
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 

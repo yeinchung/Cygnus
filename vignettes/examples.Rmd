@@ -12,6 +12,11 @@ This tutorial covers reading a processed input file from AIVIA to generate an ex
 
 For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived extracellular vesicle imaging data. The data can be downloaded here.
 
+```{r setup, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(dpi=300,fig.width=7)
+```
+
 ```{r}
 library(Cygnus)
 library(viridis)
@@ -131,7 +136,7 @@ plotElbowPlot(cyg)
 ```{r}
 set.seed(1)
 cyg <- runTSNE(cyg)
-#plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F)
+plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F)
 ```
 
 ```{r}
