@@ -13,6 +13,8 @@ plotPCA(data, plot_3d = FALSE, color_by = NULL, marker_size = 5, ...)
 
 \item{color_by}{Character string specifying metadata column to color by. Default is NULL (no coloring).}
 
+\item{marker_size}{Size of the points}
+
 \item{...}{Additional arguments for the plot function}
 }
 \value{

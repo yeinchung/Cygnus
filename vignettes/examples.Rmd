@@ -129,20 +129,21 @@ plotElbowPlot(cyg)
 ```
 
 ```{r}
+set.seed(1)
 cyg <- runTSNE(cyg)
-plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F)
+#plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F)
 ```
 
 ```{r}
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'scaled_exp_matrix')
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'scaled_exp_matrix')
 ```
 
 ```{r}
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'normalized_exp_mat')
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'normalized_exp_mat')
 ```
 
 ```{r}
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_matrix')
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_matrix')
 ```
 
 ```{r}
@@ -150,7 +151,7 @@ cyg <- runUMAP(cyg)
 ```
 
 ```{r}
-plotUMAP(cyg, color_by = "celltype", marker_size = 10)
+#plotUMAP(cyg, color_by = "celltype", marker_size = 10)
 ```
 
 ```{r}
@@ -161,9 +162,9 @@ plotUpSet(cyg, markers = c("EpCAM", "MET",
 
 ```{r}
 cyg <- ClusterCygnus(cyg, n_clusters = 3)
-plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10)
+#plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10)
 ```
 
 ```{r}
-plotTSNE(cyg, color_by = 'celltype', marker_size = 10)
+#plotTSNE(cyg, color_by = 'celltype', marker_size = 10)
 ```

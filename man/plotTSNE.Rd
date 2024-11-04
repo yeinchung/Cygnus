@@ -20,6 +20,8 @@ plotTSNE(
 \item{color_by}{Character string specifying metadata column to color by. Default is NULL (no coloring).}
 
 \item{marker_size}{Numeric value specifying the size of the markers in the plot. Default is 1.}
+
+\item{matrix_name}{Name of the matrix when colored by expression}
 }
 \value{
 A plot of the t-SNE results!
