@@ -9,7 +9,7 @@ runTSNE(
   matrix_name = "Raw_Score",
   use_relevant = TRUE,
   n_pcs = 5,
-  dims = 2,
+  dims = 3,
   use_pcs = FALSE,
   seed = 42,
   ...

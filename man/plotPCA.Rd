@@ -4,7 +4,7 @@
 \alias{plotPCA}
 \title{Visualize PCA Results}
 \usage{
-plotPCA(data, plot_3d = FALSE, color_by = NULL, ...)
+plotPCA(data, plot_3d = FALSE, color_by = NULL, marker_size = 5, ...)
 }
 \arguments{
 \item{data}{An object of class \code{CygnusObject} containing PCA results.}

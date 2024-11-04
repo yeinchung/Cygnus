@@ -54,7 +54,7 @@ runPCA <- function(data, matrix_name = "Raw_Score", num_components = 50, use_rel
 #' @return The updated CygnusObject with t-SNE coordinates stored in the 'dim_red' slot.
 #' @export
 runTSNE <- function(data, matrix_name = "Raw_Score", use_relevant = TRUE,
-                    n_pcs = 5, dims = 2, use_pcs = FALSE, seed = 42, ...) {
+                    n_pcs = 5, dims = 3, use_pcs = FALSE, seed = 42, ...) {
   if (!(matrix_name %in% names(data@matrices))) {
     stop(paste("Matrix", matrix_name, "not found in CygnusObject"))
   }
@@ -184,7 +184,7 @@ plotElbowPlot <- function(data, ...) {
 #' @param ... Additional arguments for the plot function
 #' @return A plot of the PCA results.
 #' @export
-plotPCA <- function(data, plot_3d = FALSE, color_by = NULL, ...) {
+plotPCA <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 5,...) {
   if (!"PCA" %in% names(data@dim_red)) {
     stop("PCA results not found. Run PCA first.")
   }
@@ -211,10 +211,10 @@ plotPCA <- function(data, plot_3d = FALSE, color_by = NULL, ...) {
 
   if (plot_3d && ncol(pca_coords) >= 3) {
     if (!is.null(plot_data$color)) {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~meta, colors = color_palette, type = 'scatter3d', mode = 'markers') %>%
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~meta, colors = color_palette, type = 'scatter3d', mode = 'markers', size = marker_size) %>%
         plotly::layout(legend = list(title = list(text = color_by)))
     } else {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'markers')
+      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'markers', size = marker_size)
     }
   } else {
     # Set up the layout to leave space on the right for the legend
@@ -313,7 +313,7 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ma
     }
   }
 
-  if(!is.null(color_by) && color_by %in% colnames(data@matrices[['Raw_Scores']])){
+  if(!is.null(color_by) && color_by %in% colnames(data@matrices[[matrix_name]])){
     plot_data$meta <- data@matrices[[matrix_name]][[color_by]]
 
     viridis_colors <- viridis(1000)

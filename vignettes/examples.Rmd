@@ -156,7 +156,7 @@ plotUMAP(cyg, color_by = "celltype", marker_size = 10)
 ```{r}
 plotUpSet(cyg, markers = c("EpCAM", "MET",
                                "SDC1", "EGFR", "ADAM10",
-                               "CTSH", "PDL1", "HER2"))
+                               "CTSH", "PDL1", "HER2"), nsets=10, keep.order=T)
 ```
 
 ```{r}
