@@ -13,6 +13,8 @@ This tutorial covers reading a processed input file from AIVIA to generate an ex
 For the purpose of this tutorial, we will be using an example data from KP1.9 cell line derived extracellular vesicle imaging data. The data can be downloaded here.
 
 
+
+
 ``` r
 library(Cygnus)
 library(viridis)
@@ -88,6 +90,7 @@ plotDistribution(cyg, matrix = "normalized_exp_mat")
 
 This sets arbitrary cutoff
 
+
 ``` r
 cyg <- createBinaryMatrix(cyg, thresholds = 1000)
 plotDistribution(cyg, matrix = "binary_exp_matrix")
@@ -137,6 +140,7 @@ plotAvgHeatmap(cyg, "celltype", scale = "row")
 
 **ADD DESCRIPTIONS**
 
+
 ``` r
 cyg <- markRelevantMarkers(cyg, c("EpCAM", "MET",
                                "SDC1", "EGFR", "ADAM10",
@@ -161,14 +165,78 @@ plotElbowPlot(cyg)
 ![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-18-1.png)
 
 
+``` r
+set.seed(1)
+cyg <- runTSNE(cyg)
+plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = F)
+```
+
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19-1.png)
 
 
+``` r
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'scaled_exp_matrix')
+```
 
 
+``` r
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'normalized_exp_mat')
+```
 
 
+``` r
+#plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_matrix')
+```
 
 
+``` r
+cyg <- runUMAP(cyg)
+```
+
+```
+## 12:48:32 UMAP embedding parameters a = 0.9922 b = 1.112
+```
+
+```
+## 12:48:32 Converting dataframe to numerical matrix
+```
+
+```
+## 12:48:32 Read 3264 rows and found 8 numeric columns
+```
+
+```
+## 12:48:32 Using FNN for neighbor search, n_neighbors = 30
+```
+
+```
+## 12:48:32 Commencing smooth kNN distance calibration using 4 threads with target n_neighbors = 30
+## 12:48:33 Initializing from normalized Laplacian + noise (using irlba)
+## 12:48:33 Commencing optimization for 500 epochs, with 132732 positive edges
+## 12:48:37 Optimization finished
+```
 
 
+``` r
+#plotUMAP(cyg, color_by = "celltype", marker_size = 10)
+```
 
+
+``` r
+plotUpSet(cyg, markers = c("EpCAM", "MET",
+                               "SDC1", "EGFR", "ADAM10",
+                               "CTSH", "PDL1", "HER2"), nsets=10, keep.order=T)
+```
+
+![plot of chunk unnamed-chunk-25](figure/unnamed-chunk-25-1.png)
+
+
+``` r
+cyg <- ClusterCygnus(cyg, n_clusters = 3)
+#plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10)
+```
+
+
+``` r
+#plotTSNE(cyg, color_by = 'celltype', marker_size = 10)
+```
