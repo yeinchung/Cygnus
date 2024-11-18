@@ -88,7 +88,7 @@ plotAvgHeatmap <- function(data, group_column,
                     # clustering_distance_cols = clustering_distance,
                      cluster_rows = cluster_rows,
                      color = colors,
-                     main = paste("Average Marker Expressions by", group_column),
+                    # main = paste("Average Marker Expressions by", group_column),
                      fontsize = fontsize,
                      scale = scale,
                      labels_row = unique(group_metadata))

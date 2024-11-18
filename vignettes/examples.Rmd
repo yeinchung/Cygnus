@@ -111,7 +111,7 @@ plotPCA(cyg, color_by = "celltype",plot_3d = T)
 ```{r}
 set.seed(1)
 cyg <- runTSNE(cyg)
-plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = FALSE)
+plotTSNE(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
 ```
 
 #### t-SNE with Normalized and Binary Matrices
@@ -119,6 +119,13 @@ plotTSNE(cyg, color_by = "celltype", marker_size = 10, plot_3d = FALSE)
 plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'scaled_exp_matrix')
 plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'normalized_exp_mat')
 plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_matrix')
+```
+
+#### UMAP
+```{r}
+set.seed(1)
+cyg <- runUMAP(cyg)
+plotUMAP(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
 ```
 
 ### Clustering
