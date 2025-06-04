@@ -51,8 +51,7 @@ plotDistribution <- function(
 
     # Assign colors to groups
     if (is.null(group_colors)) {
-      library(RColorBrewer)
-      brewer_colors <- brewer.pal(max(3, length(groups)), "Set2")
+      brewer_colors <- RColorBrewer::brewer.pal(max(3, length(groups)), "Set2")
       group_colors <- setNames(brewer_colors[1:length(groups)], groups)
     } else {
       # Check if provided colors match the groups

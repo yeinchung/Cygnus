@@ -32,7 +32,8 @@ Imports:
   markdown,
   magrittr, 
   viridis,
-  webshot
+  webshot,
+  RColorBrewer
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 
