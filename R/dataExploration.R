@@ -2,16 +2,21 @@
 #'
 #' This function plots the distribution of expression levels for selected markers in an expression matrix.
 #' The user can specify a subset of markers to plot, or plot all markers by default.
+#' Additionally, the user can group histograms by a specified column in ev_meta.
 #'
-#' @param obj An object of class \code{CygnusObject} containing the expression matrix.
+#' @param obj An object of class \code{CygnusObject} containing the expression matrix and metadata.
 #' @param plot_markers A vector of marker names to plot. If set to "ALL", distributions for all markers will be plotted. Default is "ALL".
 #' @param matrix Character string specifying the name of the matrix to use. Default is "Raw_Score".
+#' @param group_by A character string specifying a column in \code{ev_meta} to group histograms by. Default is \code{NULL} (no grouping).
+#' @param group_colors A named vector of colors for groups. Names should correspond to unique values in the group_by column. If not specified, defaults to the RColorBrewer Set2 palette.
 #' @return A series of histogram plots, each representing the distribution of expression levels for the specified markers.
 #' @export
 plotDistribution <- function(
     obj,
     plot_markers = "ALL",
-    matrix = "Raw_Score"
+    matrix = "Raw_Score",
+    group_by = NULL,
+    group_colors = NULL
 ) {
   # Check if the specified matrix exists
   if (!(matrix %in% names(obj@matrices))) {
@@ -20,33 +25,73 @@ plotDistribution <- function(
 
   matrix_data <- obj@matrices[[matrix]]
 
+  # Check if plot_markers is "ALL" or a subset
   if (plot_markers == "ALL") {
     plot_markers <- colnames(matrix_data)
   } else {
     plot_markers <- intersect(plot_markers, colnames(matrix_data))
   }
 
-  num_cols <- length(plot_markers)
-
-  # Ensure num_rows is at least 1
-  num_rows <- max(1, ceiling(num_cols / 3))
-
-  # Ensure valid plotting parameters
-  if (num_cols == 0) {
+  if (length(plot_markers) == 0) {
     stop("No markers to plot.")
   }
+
+  # Check if group_by is provided and exists in ev_meta
+  if (!is.null(group_by)) {
+    if (!(group_by %in% names(obj@ev_meta))) {
+      stop(paste("Group column", group_by, "not found in ev_meta"))
+    }
+    # Extract unique groups, excluding NAs
+    groups <- unique(na.omit(obj@ev_meta[[group_by]]))
+
+    # Ensure groups are valid
+    if (length(groups) == 0) {
+      stop("No valid groups found in the group_by column.")
+    }
+
+    # Assign colors to groups
+    if (is.null(group_colors)) {
+      library(RColorBrewer)
+      brewer_colors <- brewer.pal(max(3, length(groups)), "Set2")
+      group_colors <- setNames(brewer_colors[1:length(groups)], groups)
+    } else {
+      # Check if provided colors match the groups
+      if (!all(groups %in% names(group_colors))) {
+        stop("Not all groups have corresponding colors in group_colors.")
+      }
+    }
+  } else {
+    groups <- NULL
+  }
+
+  num_cols <- length(plot_markers)
+  num_rows <- max(1, ceiling(num_cols / 3))
 
   graphics::par(mfrow = c(num_rows, min(3, num_cols)))
   graphics::par(mar = c(2, 2, 2, 1))
 
   for (marker in plot_markers) {
-    hist(matrix_data[, marker], breaks = 1000,
-         main = paste(marker),
-         xlab = "", ylab = "")
+    if (!is.null(groups)) {
+      # Plot separate histograms for each group with different colors
+      for (group in groups) {
+        group_indices <- obj@ev_meta[[group_by]] == group
+        hist(matrix_data[group_indices, marker], breaks = 200,
+             main = paste(marker, "-", group),
+             xlab = "", ylab = "",
+             col = group_colors[group], border = group_colors[group])
+      }
+    } else {
+      # Plot a single histogram
+      hist(matrix_data[, marker], breaks = 1000,
+           main = paste(marker),
+           xlab = "", ylab = "")
+    }
   }
 
   graphics::par(mfrow = c(1, 1))
 }
+
+
 
 #' Plot Average Expression Heatmap by Group
 #'

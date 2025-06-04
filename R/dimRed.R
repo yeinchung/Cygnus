@@ -310,13 +310,17 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ma
     plot_data$meta <- as.factor(plot_data$meta)
 
     if (is.factor(plot_data$meta)) {
-      color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set1")
+      color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set3")
       plot_data$color <- color_palette[plot_data$meta]
+      print(plot_data$color)
     }
   }
 
-  if(!is.null(color_by) && color_by %in% colnames(data@matrices[[matrix_name]])){
-    plot_data$meta <- data@matrices[[matrix_name]][[color_by]]
+  if(!is.null(color_by) && color_by %in% colnames(data@matrices$Raw_Score)){
+    #plot_data$meta <- data@matrices[[matrix_name]][[color_by]] # NEED TO FIX THIS CODE CUZ I COULDNT FIGURE OUT
+    # HOW TO cyg@matrices[['Raw_Scores']] returns NULL so i just set it norm mat
+    print("this code might be working... at least it entered this if statement")
+    plot_data$meta <- data@matrices$normalized_exp_mat[[color_by]]
 
     viridis_colors <- viridis(1000)
     magma_colors <- magma(1000)

@@ -17,7 +17,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(dpi=150, fig.width=4, fig.height=3) # Adjusted figure size
 ```
 
-```{r echo=T, results='hide'}
+```{r echo=F, results='hide'}
 library(Cygnus)
 library(viridis)
 library(plotly)
@@ -52,6 +52,16 @@ cyg@ev_meta[['type']] <- "cell_line"
 
 ```{r}
 plotDistribution(cyg)
+
+plotDistribution(
+    obj = cyg,
+    plot_markers = "EpCAM",
+    matrix = "Raw_Score",
+    group_by = "celltype",
+    group_colors = c("A549" = "#FF7966", "H2228" = "#CB8FF8", "KP" = "#7CC0F6")
+)
+
+
 ```
 
 ### Scaling Expression Matrices
@@ -71,6 +81,15 @@ PanEV expression often correlates with EV size. This function normalizes marker 
 cyg <- normalizeByPanEV(cyg, "PanEV")
 plotDistribution(cyg, matrix = "normalized_exp_mat") +
   theme(text = element_text(size = 8))
+
+plotDistribution(
+    obj = cyg,
+    plot_markers = "PanEV",
+    matrix = "normalized_exp_mat",
+    group_by = "celltype",
+    group_colors = c("A549" = "#FF7966", "H2228" = "#CB8FF8", "KP" = "#7CC0F6")
+    
+)
 ```
 
 ### Creating a Binary Matrix
@@ -78,7 +97,7 @@ plotDistribution(cyg, matrix = "normalized_exp_mat") +
 Binary matrices threshold marker expressions for classification purposes.
 
 ```{r}
-cyg <- createBinaryMatrix(cyg, thresholds = 1000)
+cyg <- createBinaryMatrix(cyg, thresholds = 100)
 plotDistribution(cyg, matrix = "binary_exp_matrix") +
   theme(text = element_text(size = 8))
 ```
@@ -103,13 +122,13 @@ cyg <- markRelevantMarkers(cyg, c("EpCAM", "MET",
 
 #### PCA
 ```{r}
-cyg <- runPCA(cyg, matrix_name = "Raw_Score")
+cyg <- runPCA(cyg, matrix_name = "normalized_exp_mat")
 plotPCA(cyg, color_by = "celltype",plot_3d = T)
 ```
 
 #### t-SNE
 ```{r}
-set.seed(1)
+set.seed(10)
 cyg <- runTSNE(cyg)
 plotTSNE(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
 ```
@@ -123,7 +142,7 @@ plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_mat
 
 #### UMAP
 ```{r}
-set.seed(1)
+set.seed(100)
 cyg <- runUMAP(cyg)
 plotUMAP(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
 ```
