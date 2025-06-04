@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   examples: examples.html
-last_built: 2024-11-18T23:50Z
+last_built: 2025-06-04T20:49Z
 urls:
   reference: https://yeinchung.github.io/Cygnus/reference
   article: https://yeinchung.github.io/Cygnus/articles
