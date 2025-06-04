@@ -1,13 +1,15 @@
-<p align="center"><img src="man/figures/image.png" alt="" width="350"></a></p>
+<p align="center"><img src="man/figures/overview.png" alt="" width="500"></a></p>
 <hr>
 
-### Cygnus Version 0.1.0
+### Cygnus Version 1.0.0
 
 **Single EV Imaging Data Analysis and Visualization Pipeline**
 
-Cygnus offers customizable and interactive workflow for single EV analysis with multiplexing (SEAM) 
+Cygnus's analytics module offers a customizable and interactive workflow for single EV analysis with multiplexing. It is designed to accommodate multiple input file types (e.g. xls, csv, fcs, sql) to ensure compatibility with a wide range of data sources and experimental modalities. 
 
+<p align="center"><img src="man/figures/module.png" alt="" width="800"></a></p>
 <hr>
+
 
 ## Quick Installation of Cygnus
 
@@ -27,10 +29,13 @@ devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::
 ```
 <hr>
 
+## Tutorial
+Vignette for Cygnus analysis workflow can be found <a href=https://yeinchung.github.io/Cygnus/articles/examples.html>here</a>. 
+
 ## Issues using Cygnus?
 
 Cygnus is currently in __beta__. If you think you have found a bug, please first install the latest version of Cygnus via
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
-If this does not fix your problem, please [report an issue on Github](https://github.com/yeinchung/Cygnus/issues) with the __Bug Report__ form.
+If this does not fix your problem, please [report an issue on Github](https://github.com/yeinchung/Cygnus/issues) with the __Bug Report__ form. 
