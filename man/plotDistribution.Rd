@@ -4,14 +4,24 @@
 \alias{plotDistribution}
 \title{Plot Distributions of Selected Markers}
 \usage{
-plotDistribution(obj, plot_markers = "ALL", matrix = "Raw_Score")
+plotDistribution(
+  obj,
+  plot_markers = "ALL",
+  matrix = "Raw_Score",
+  group_by = NULL,
+  group_colors = NULL
+)
 }
 \arguments{
-\item{obj}{An object of class \code{CygnusObject} containing the expression matrix.}
+\item{obj}{An object of class \code{CygnusObject} containing the expression matrix and metadata.}
 
 \item{plot_markers}{A vector of marker names to plot. If set to "ALL", distributions for all markers will be plotted. Default is "ALL".}
 
 \item{matrix}{Character string specifying the name of the matrix to use. Default is "Raw_Score".}
+
+\item{group_by}{A character string specifying a column in \code{ev_meta} to group histograms by. Default is \code{NULL} (no grouping).}
+
+\item{group_colors}{A named vector of colors for groups. Names should correspond to unique values in the group_by column. If not specified, defaults to the RColorBrewer Set2 palette.}
 }
 \value{
 A series of histogram plots, each representing the distribution of expression levels for the specified markers.
@@ -19,4 +29,5 @@ A series of histogram plots, each representing the distribution of expression le
 \description{
 This function plots the distribution of expression levels for selected markers in an expression matrix.
 The user can specify a subset of markers to plot, or plot all markers by default.
+Additionally, the user can group histograms by a specified column in ev_meta.
 }
