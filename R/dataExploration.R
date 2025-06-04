@@ -407,8 +407,6 @@ normalizeByPanEV <- function(data, pan_ev_marker) {
 
 
 
-
-
 #' Add IgG distribution
 #'
 #' @param data An object of class \code{CygnusObject}
