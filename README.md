@@ -1,11 +1,11 @@
 <p align="center"><img src="man/figures/overview.png" alt="" width="500"></a></p>
 <hr>
 
-### Cygnus Version 1.0.0
+# Cygnus Version 1.0.0
 
 **Single EV Imaging Data Analysis and Visualization Pipeline**
 
-Cygnus's analytics module offers a customizable and interactive workflow for single EV analysis with multiplexing. It is designed to accommodate multiple input file types (e.g. xls, csv, fcs, sql) to ensure compatibility with a wide range of data sources and experimental modalities. 
+Cygnus's analytics module offers a customizable and interactive workflow for single EV analysis with multiplexing. It is designed to accommodate multiple input file types (e.g. xls, csv, fcs, sql) to ensure compatibility with a wide range of data sources and experimental modalities. Vignette for Cygnus analysis workflow can be found <a href=https://yeinchung.github.io/Cygnus/articles/examples.html>here</a>. 
 
 <p align="center"><img src="man/figures/module.png" alt="" width="800"></a></p>
 <hr>
@@ -28,9 +28,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
 <hr>
-
-## Tutorial
-Vignette for Cygnus analysis workflow can be found <a href=https://yeinchung.github.io/Cygnus/articles/examples.html>here</a>. 
 
 ## Issues using Cygnus?
 
