@@ -10,6 +10,7 @@
 <url><loc>https://yeinchung.github.io/Cygnus/reference/CygnusObject-class.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/addIgG.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/createBinaryMatrix.html</loc></url>
+<url><loc>https://yeinchung.github.io/Cygnus/reference/getColocalizedMarkers.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/hello.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/index.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/markRelevantMarkers.html</loc></url>
@@ -24,6 +25,7 @@
 <url><loc>https://yeinchung.github.io/Cygnus/reference/plotTSNE.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/plotUMAP.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/plotUpSet.html</loc></url>
+<url><loc>https://yeinchung.github.io/Cygnus/reference/plotUpSet_basic.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/runPCA.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/runTSNE.html</loc></url>
 <url><loc>https://yeinchung.github.io/Cygnus/reference/runUMAP.html</loc></url>

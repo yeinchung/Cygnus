@@ -60,6 +60,7 @@ The heatmap allows customization of clustering distance, color palette, font siz
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotAvgHeatmap</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">group_column</span>,</span>
+<span>  only_relevant_markers <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clustering_distance <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">(</span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette</a></span><span class="op">(</span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>,</span>
 <span>    <span class="st">"RdYlBu"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -80,6 +81,10 @@ The heatmap allows customization of clustering distance, color palette, font siz
 
 <dt id="arg-group-column">group_column<a class="anchor" aria-label="anchor" href="#arg-group-column"></a></dt>
 <dd><p>Character string specifying the metadata column to group by.</p></dd>
+
+
+<dt id="arg-only-relevant-markers">only_relevant_markers<a class="anchor" aria-label="anchor" href="#arg-only-relevant-markers"></a></dt>
+<dd><p>Logical value indicating whether only relevant markers should be plotted.</p></dd>
 
 
 <dt id="arg-clustering-distance">clustering_distance<a class="anchor" aria-label="anchor" href="#arg-clustering-distance"></a></dt>
