@@ -63,11 +63,18 @@ plotDistribution <- function(
     groups <- NULL
   }
 
-  num_cols <- length(plot_markers)
-  num_rows <- max(1, ceiling(num_cols / 3))
+  if (!is.null(groups)) {
+    nplots <- length(plot_markers) * length(groups)
+  } else {
+    nplots <- length(plot_markers)
+  }
 
-  graphics::par(mfrow = c(num_rows, min(3, num_cols)))
+  ncols <- min(3, nplots)
+  nrows <- ceiling(nplots / ncols)
+
+  graphics::par(mfrow = c(nrows, ncols))
   graphics::par(mar = c(2, 2, 2, 1))
+
 
   for (marker in plot_markers) {
     if (!is.null(groups)) {
@@ -87,7 +94,7 @@ plotDistribution <- function(
     }
   }
 
-  graphics::par(mfrow = c(1, 1))
+  graphics::par(mfrow = c(nrows, ncols))
 }
 
 
@@ -99,6 +106,7 @@ plotDistribution <- function(
 #'
 #' @param data An object of class \code{CygnusObject} containing an expression matrix and metadata.
 #' @param group_column Character string specifying the metadata column to group by.
+#' @param only_relevant_markers Logical value indicating whether only relevant markers should be plotted.
 #' @param clustering_distance Character string specifying the distance metric for clustering columns. Default is "euclidean".
 #' @param colors A color palette to use for the heatmap. Default is a reversed "RdYlBu" palette from RColorBrewer.
 #' @param fontsize Numeric value specifying the font size for heatmap text. Default is 8.
@@ -111,6 +119,7 @@ plotDistribution <- function(
 #'
 #' @export
 plotAvgHeatmap <- function(data, group_column,
+                           only_relevant_markers = FALSE,
                            clustering_distance = "euclidean",
                            colors = rev(grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 11, "RdYlBu"))(100)),
                            fontsize = 8,
@@ -118,13 +127,23 @@ plotAvgHeatmap <- function(data, group_column,
                            cluster_rows = FALSE,
                            na.rm = TRUE) {
 
-  expression_matrix <- data@matrices$Raw_Score
+  if(only_relevant_markers){
+    relevant_markers <- data@markers_meta$marker[data@markers_meta$relevant]
+
+    if (is.null(relevant_markers) || length(relevant_markers) == 0) {
+      stop("No relevant markers found.")
+    }
+    expression_matrix <- data@matrices$Raw_Score[, relevant_markers, drop = FALSE]
+  }else{
+    expression_matrix <- data@matrices$Raw_Score
+  }
+
   group_metadata <- data@ev_meta[[group_column]]
 
   combined_data <- cbind(expression_matrix, group_metadata)
   avg_marker_expressions <- combined_data %>%
     dplyr::group_by(group_metadata) %>%
-    dplyr::summarise(dplyr::across(dplyr::everything(), mean, na.rm = na.rm)) %>%
+    dplyr::summarise(dplyr::across(dplyr::everything(), \(x) mean(x, na.rm = na.rm))) %>%
     dplyr::select(-group_metadata) %>%
     as.matrix()
 

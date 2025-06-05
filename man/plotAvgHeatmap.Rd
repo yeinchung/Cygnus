@@ -7,6 +7,7 @@
 plotAvgHeatmap(
   data,
   group_column,
+  only_relevant_markers = FALSE,
   clustering_distance = "euclidean",
   colors = rev((grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 11,
     "RdYlBu")))(100)),
@@ -20,6 +21,8 @@ plotAvgHeatmap(
 \item{data}{An object of class \code{CygnusObject} containing an expression matrix and metadata.}
 
 \item{group_column}{Character string specifying the metadata column to group by.}
+
+\item{only_relevant_markers}{Logical value indicating whether only relevant markers should be plotted.}
 
 \item{clustering_distance}{Character string specifying the distance metric for clustering columns. Default is "euclidean".}
 

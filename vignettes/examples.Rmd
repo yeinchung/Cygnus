@@ -117,6 +117,11 @@ cyg <- markRelevantMarkers(cyg, c("EpCAM", "MET",
                                "SDC1", "EGFR", "ADAM10",
                                "CTSH", "PDL1", "HER2"))
 ```
+Now, we can only plot relevant markers using the AverageHeatmap functionality:
+```{r}
+plotAvgHeatmap(cyg, "celltype", only_relevant_markers = TRUE, scale = "row")
+```
+
 
 ### Dimensionality Reduction and Visualization
 
@@ -125,26 +130,33 @@ cyg <- markRelevantMarkers(cyg, c("EpCAM", "MET",
 cyg <- runPCA(cyg, matrix_name = "normalized_exp_mat")
 plotPCA(cyg, color_by = "celltype",plot_3d = T)
 ```
+Note that we can run PCA with the raw, and un-normalized matrix as well: 
+```{r}
+cyg <- runPCA(cyg, matrix_name = "Raw_Score")
+plotPCA(cyg, color_by = "celltype",plot_3d = T)
+```
+Here, you can note that the KP cell line seems very different from the other two cell line, which si a difference is effectively reduced upon normalization. This suggests...
 
 #### t-SNE
 ```{r}
-set.seed(10)
-cyg <- runTSNE(cyg)
+set.seed(100)
+
+cyg <- runTSNE(cyg, matrix_name = "normalized_exp_mat")
 plotTSNE(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
 ```
 
 #### t-SNE with Normalized and Binary Matrices
 ```{r}
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'scaled_exp_matrix')
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'normalized_exp_mat')
-plotTSNE(cyg, color_by = "HER2", marker_size = 10, matrix_name = 'binary_exp_matrix')
+plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'Raw_Score')
+plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'normalized_exp_mat')
+plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'binary_exp_matrix')
 ```
 
 #### UMAP
 ```{r}
 set.seed(100)
-cyg <- runUMAP(cyg)
-plotUMAP(cyg, color_by = "celltype", marker_size = 6, plot_3d = T)
+cyg <- runUMAP(cyg, matrix_name = "normalized_exp_mat")
+plotUMAP(cyg, color_by = "celltype", marker_size = 5, plot_3d = T)
 ```
 
 ### Clustering
@@ -167,5 +179,5 @@ Visualize marker intersections with an UpSet plot.
 #           nsets = 10, keep.order = TRUE)
 
 colocal_marker <- getColocalizedMarkers(cyg)
-plotUpset(cyg, colocal_marker)
+plotUpset(cyg, colocal_marker, threshold_count = 4)
 ```
