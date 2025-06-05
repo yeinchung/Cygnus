@@ -36,7 +36,7 @@ plotUpSet_basic <- function(data, markers = NULL, ...) {
 #' Generate Marker Colocalization Deviation and Statistics
 #' @param data An object of class \code{CygnusObject} containing the binary expression matrix.
 #' @param matrix_name The matrix within the data object that contains the binary expression matrix. The default is set to binary_exp_mat
-#' @param iternation_no The number of iterations for simulation
+#' @param iteration_no The number of iterations for simulation
 #' @return A dataframe of deviation and statistics of each intersection
 #' @export
 getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", iteration_no = 100){
@@ -50,13 +50,6 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
   relevant_markers <- data@markers_meta$marker[data@markers_meta$relevant]
   if (is.null(relevant_markers) || length(relevant_markers) == 0) {
     stop("No relevant markers found.")
-  }
-
-  if (!is.null(markers)) {
-    relevant_markers <- relevant_markers[relevant_markers %in% markers]
-    if (length(relevant_markers) == 0) {
-      stop("None of the specified markers were found in relevant markers.")
-    }
   }
 
   binary_matrix <- binary_matrix[, relevant_markers, drop = FALSE]
@@ -112,11 +105,7 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
   # Calculate observed counts for each intersection from the actual data
   observed <- membership_matrix %>%
-    count(Intersection, name = "Observed")
-
-
-  # Simulate null distribution of deviations by shuffling marker expressions
-  iteration_no = 100 # Number of simulations (1000 for final analysis)
+    dplyr::count(Intersection, name = "Observed")
 
   print("Running simulation to calculate the null distribution of deviations...")
 
@@ -132,13 +121,13 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
     # Count intersections in shuffled data
     shuffled_counts <- shuffled_long %>%
-      count(Intersection, name = "Shuffled_Observed")
+      dplyr::count(Intersection, name = "Shuffled_Observed")
 
     # Calculate deviations between shuffled and expected counts
     deviation <- expected_prob_df %>%
-      left_join(shuffled_counts, by = "Intersection") %>%
+      dplyr::left_join(shuffled_counts, by = "Intersection") %>%
       mutate(
-        Shuffled_Observed = replace_na(Shuffled_Observed, 0), # Replace NA with 0
+        Shuffled_Observed = tidyr::replace_na(Shuffled_Observed, 0), # Replace NA with 0
         Deviation = Shuffled_Observed - Expected_Count   # Compute deviation
       ) %>%
       select(Intersection, Deviation)
@@ -148,7 +137,7 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
 
   # Aggregate null deviations across simulations
-  null_deviation_summary <- bind_rows(null_deviation_distributions, .id = "Simulation") %>%
+  null_deviation_summary <- dplyr::bind_rows(null_deviation_distributions, .id = "Simulation") %>%
     group_by(Intersection) %>%
     summarise(
       MeanDeviation = mean(Deviation, na.rm = TRUE),  # Mean deviation
@@ -158,11 +147,11 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
   # Calculate deviation statistics for the actual observed data
   deviation_stats <- observed %>%
-    left_join(expected_prob_df, by = "Intersection") %>%
+    dplyr::left_join(expected_prob_df, by = "Intersection") %>%
     mutate(
       Actual_Deviation = Observed - Expected_Count     # Compute actual deviation
     ) %>%
-    left_join(null_deviation_summary, by = "Intersection") %>%
+    dplyr::left_join(null_deviation_summary, by = "Intersection") %>%
     mutate(
       p_value = pnorm(Actual_Deviation / SDDeviation, lower.tail = FALSE),   # Compute p-value
       p_adj = p.adjust(p_value, method = "bonferroni")    # Adjust p-values for multiple testing
@@ -178,7 +167,7 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
   # Merge deviation statistics back into the membership matrix for plotting
   membership_matrix_long <- membership_matrix %>%
-    left_join(deviation_stats, by = "Intersection")
+    dplyr::left_join(deviation_stats, by = "Intersection")
 
 
   # Prepare data for upset plot
@@ -194,26 +183,45 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 
 #' Generate an UpSet Plot from Colocalization Statistics
 #'
+#' @param data An object of class \code{CygnusObject} containing the binary expression matrix.
 #' @param colocal_data A data frame of deviations and statistics from running getColocalizedMarkers
+#' @param matrix_name The matrix within the data object that contains the binary expression matrix. The default is set to binary_exp_mat
 #' @param threshold_count An integer indicating the minimum number of elements in an intersection
 #' @param min_degree_setting An integer indicating the minimum degree of intersection for plotting
 #' @export
-plotUpset <- function(colocal_data, threshold_count = 1, min_degree_setting = 1){
+plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", threshold_count = 1, min_degree_setting = 1){
+  if (!"binary_exp_matrix" %in% names(data@matrices)) {
+    stop("Binary expression matrix not found. Please run createBinaryMatrix first.")
+  }
+
+  binary_matrix <- data@matrices$binary_exp_matrix
+
+  relevant_markers <- data@markers_meta$marker[data@markers_meta$relevant]
+  if (is.null(relevant_markers) || length(relevant_markers) == 0) {
+    stop("No relevant markers found.")
+  }
+
+  binary_matrix <- binary_matrix[, relevant_markers, drop = FALSE]
+
+  binary_df <- as.data.frame(binary_matrix)
+  colnames(binary_df) <- relevant_markers
+
+
   #  Intersection 별 count 계산 (treshold_count 이상만 유지하기 위함 )
-  intersection_counts <- membership_matrix_mixed %>%
-    count(Intersection, name = "Observed") %>%  #  각 cell 갯수  계산
+  intersection_counts <- colocal_data %>%
+    dplyr::count(Intersection, name = "Observed") %>%  #  각 cell 갯수  계산
     filter(Observed >= threshold_count) #  1threshold_count 미만 조합 제외
 
   # 유효한 intersection 만 따로 저장
   valid_intersections <- intersection_counts$Intersection
 
   # 전체 data에서 threshold_count 이상 조합만 남긴 새로운 데이터
-  filtered_matrix <- membership_matrix_mixed %>%
+  filtered_matrix <- colocal_data %>%
     filter(Intersection %in% valid_intersections)
 
 
   # 💡 각 row에 대해 몇 개의 마커가 양성인지(degree) 계산
-  marker_matrix <- filtered_matrix[, colnames(binary_exp_matrix)]  #  마커 값만 추출
+  marker_matrix <- filtered_matrix[, colnames(binary_df)]  #  마커 값만 추출
   filtered_matrix$Degree <- rowSums(marker_matrix)  #  각 셀마다 양성 마커 수 합산
 
 
@@ -223,19 +231,19 @@ plotUpset <- function(colocal_data, threshold_count = 1, min_degree_setting = 1)
 
   #  위에서 필터링한 조합 중 가장 많은 intersection count를 구함 (y축 최대값 계산용)
   max_count <- plot_data %>%
-    count(Intersection) %>%
-    pull(n) %>%
+    dplyr::count(Intersection) %>%
+    dplyr::pull(n) %>%
     max()
 
   # upset plot
-  upset_plot <- upset(
+  upset_plot <- ComplexUpset::upset(
     plot_data,
-    intersect = colnames(binary_exp_matrix),
+    intersect = colnames(binary_df),
     min_degree = min_degree_setting,
     name = "biomarkers",
     stripes = c('white', 'grey90'),  # Color stripes for the plot #deepskyblue1
     set_sizes = (
-      upset_set_size()       # Add set sizes to the plot
+      ComplexUpset::upset_set_size()       # Add set sizes to the plot
       + geom_text(
         aes(label = ..count..),  # Add counts to set sizes
         stat = "count",
@@ -251,7 +259,7 @@ plotUpset <- function(colocal_data, threshold_count = 1, min_degree_setting = 1)
 
 
     base_annotations=list(
-      'Intersection size'=intersection_size(
+      'Intersection size'=ComplexUpset::intersection_size(
         counts= TRUE,         # Show intersection sizes
         bar_number_threshold = 1,   # Show all bars
         mapping =aes(fill = Actual_Deviation),   # Fill bars by actual deviation

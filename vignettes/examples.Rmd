@@ -84,7 +84,7 @@ plotDistribution(cyg, matrix = "normalized_exp_mat") +
 
 plotDistribution(
     obj = cyg,
-    plot_markers = "PanEV",
+    plot_markers = "EpCAM",
     matrix = "normalized_exp_mat",
     group_by = "celltype",
     group_colors = c("A549" = "#FF7966", "H2228" = "#CB8FF8", "KP" = "#7CC0F6")
@@ -153,7 +153,7 @@ Cluster EVs based on their expression profiles.
 
 ```{r}
 cyg <- ClusterCygnus(cyg, n_clusters = 3)
-plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10) 
+#plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10) 
 ```
 
 ### UpSet Plot for Marker Co-localization
@@ -161,8 +161,11 @@ plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 10)
 Visualize marker intersections with an UpSet plot.
 
 ```{r}
-plotUpSet(cyg, markers = c("EpCAM", "MET",
-                           "SDC1", "EGFR", "ADAM10",
-                           "CTSH", "PDL1", "HER2"), 
-          nsets = 10, keep.order = TRUE)
+# plotUpSet(cyg, markers = c("EpCAM", "MET",
+#                            "SDC1", "EGFR", "ADAM10",
+#                            "CTSH", "PDL1", "HER2"), 
+#           nsets = 10, keep.order = TRUE)
+
+colocal_marker <- getColocalizedMarkers(cyg)
+plotUpset(cyg, colocal_marker)
 ```
