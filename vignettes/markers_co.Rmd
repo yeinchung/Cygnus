@@ -5,7 +5,6 @@ vignette: >
   %\VignetteIndexEntry{Co-localization Calculations and Statistics}
   %\usepackage[UTF-8]{inputenc}
 title: "Co-localization Calculations and Statistics"
-bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
