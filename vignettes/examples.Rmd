@@ -14,8 +14,8 @@ For this tutorial, we will use example data from cell line derived extracellular
 
 ```{r setup, include=FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
-#knitr::opts_chunk$set(dpi=150, fig.width=4, fig.height=3) # Adjusted figure size
-knitr::opts_chunk$set(dev = 'pdf')
+knitr::opts_chunk$set(dpi=150, fig.width=4, fig.height=3) # Adjusted figure size
+#knitr::opts_chunk$set(dev = 'pdf')
 ```
 
 ```{r libraries, echo=FALSE, message=FALSE, results='hide'}
