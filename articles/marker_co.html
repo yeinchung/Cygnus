@@ -131,8 +131,13 @@ expertise. Lastly, there is currently no standardized method for
 integrating statistical analyses to identify significantly enriched or
 depleted intersections. Addressing these challenges would enhance the
 utility of UpSet plots for broader applications.</p>
-<p>##Adding statistical analysis to UpSet</p>
-<p>###Concept of deviation</p>
+</div>
+<div class="section level2">
+<h2 id="adding-statistical-analysis-to-upset">Adding statistical analysis to UpSet<a class="anchor" aria-label="anchor" href="#adding-statistical-analysis-to-upset"></a>
+</h2>
+<div class="section level3">
+<h3 id="concept-of-deviation">Concept of deviation<a class="anchor" aria-label="anchor" href="#concept-of-deviation"></a>
+</h3>
 <p>When the UpSet plot was introduced, the concept of deviation was also
 discussed <span class="citation">@6876017</span>. Deviation describes
 the difference between the expected and observed cardinality. The
@@ -144,7 +149,10 @@ measure of “surprise.” However, a high deviation may result from random
 chance or from a meaningful dependence between sets. This necessitates a
 statistical approach to quantify how likely a deviation value could
 arise from randomness.</p>
-<p>###Methodology for statistical significance</p>
+</div>
+<div class="section level3">
+<h3 id="methodology-for-statistical-significance">Methodology for statistical significance<a class="anchor" aria-label="anchor" href="#methodology-for-statistical-significance"></a>
+</h3>
 <p>We propose a method to compute and visualize the statistical
 significance of deviations. The process begins with a matrix where rows
 indicate individual elements, and columns indicate their set
@@ -159,6 +167,7 @@ null distribution, we calculate the likelihood of obtaining such a
 deviation by chance. This allows us to compute p-values for each
 intersection. We then apply a Bonferroni correction to identify
 statistically significant deviations.</p>
+</div>
 <div class="section level3">
 <h3 id="example-analysis-and-interpretations">Example analysis and interpretations<a class="anchor" aria-label="anchor" href="#example-analysis-and-interpretations"></a>
 </h3>
