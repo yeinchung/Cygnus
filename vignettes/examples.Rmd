@@ -198,7 +198,7 @@ head(colocal_marker)
 
 After computing deviations and their associated p-values, marker co-localizations can be visualized using an UpSet plot from the ComplexUpset package.
 
-```{r fig.width=8, fig.height=5}
+```{r fig.width=8, fig.height=5, warning=FALSE}
 # plotUpSet(cyg, markers = c("EpCAM", "MET",
 #                            "SDC1", "EGFR", "ADAM10",
 #                            "CTSH", "PDL1", "HER2"), 
@@ -269,7 +269,7 @@ plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 5)
 
 Clusters and their proportions can be visualized using the following approach:
 
-```{r warning=FALSE, fig.width=5, fig.height=5}
+```{r warning=FALSE, fig.width=3, fig.height=3}
 plotBar(cyg, color_by = "celltype", split_by = "k_means_clusters")
 ```
 
