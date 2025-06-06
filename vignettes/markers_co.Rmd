@@ -63,5 +63,7 @@ cyg <- markRelevantMarkers(cyg, c("EpCAM", "MET",
 
 cyg <- createBinaryMatrix(cyg, thresholds = 1000)
 
+colocal_marker <- getColocalizedMarkers(cyg)
+
 plotUpset(cyg, colocal_marker, threshold_count = 10)
 ```
