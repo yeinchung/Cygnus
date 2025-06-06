@@ -168,7 +168,7 @@ Cygnus supports data analysis from two complementary perspectives: marker-center
 
 To determine whether a set of markers are present simultaneously on EVs, expression levels for each marker can be converted into binary sscores: 1 if expressed, 0 if not. This binarization is particularly useful because it allows co-localization to be analyzed using set-based approaches—treating presence as membership in a group (1) and absence as non-membership (0).
 
-In this example, a hard threshold of 1000 is applied: if the Raw_Score is greater than 1000, the binary score is 1; if less, it’s 0. For greater flexibility, thresholds can be specified as a vector with unique cutoffs for each marker. Cygnus also offers alternative methods to determine thresholds, such as using IgG distributions to correct for non-specific binding. More details can be found [here].
+In this example, a hard threshold of 1000 is applied: if the Raw_Score is greater than 1000, the binary score is 1; if less, it’s 0. For greater flexibility, thresholds can be specified as a vector with unique cutoffs for each marker. Cygnus also offers alternative methods to determine thresholds, such as using IgG distributions to correct for non-specific binding.
 
 ```{r}
 cyg <- createBinaryMatrix(cyg, thresholds = 5000)
@@ -183,7 +183,7 @@ head(cyg@matrices$binary_exp_matrix)
 
 ### Computing Deviations and p-values
 
-Cygnus calculates the deviation—the difference between observed and expected counts—for each marker intersection. It then estimates p-values by running simulations under the null hypothesis that all markers are independent. More details can be found [here].
+Cygnus calculates the deviation—the difference between observed and expected counts—for each marker intersection. It then estimates p-values by running simulations under the null hypothesis that all markers are independent. More details can be found [here](https://yeinchung.github.io/Cygnus/articles/marker_co.html).
 
 ```{r}
 colocal_marker <- getColocalizedMarkers(cyg)
@@ -208,8 +208,6 @@ Alternatively, a volcano plot can be used to more easily visualize significant i
 ```{r fig.width=7, fig.height=5}
 plotVolcano(colocal_marker)
 ```
-
-More information on interpreting UpSet and volcano plots can be found [here].
 
 ## Dimensionality Reduction and Clustering
 
