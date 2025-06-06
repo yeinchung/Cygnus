@@ -2,11 +2,10 @@
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Cygnus Example Analysis - A Quick Tutorial}
+  %\VignetteIndexEntry{Cygnus Example Analysis - A Tutorial}
   %\usepackage[UTF-8]{inputenc}
+title: "Cygnus Example Analysis - A Tutorial"
 ---
-
-# Cygnus Example Analysis - A Quick Tutorial
 
 This tutorial covers reading a processed input file from AIVIA to generate an example report and 3D plots required for interactive data visualization. The instructions for package installation can be found <a href=https://yeinchung.github.io/Cygnus/>here</a>.
 
@@ -18,7 +17,7 @@ knitr::opts_chunk$set(dpi=150, fig.width=4, fig.height=3) # Adjusted figure size
 #knitr::opts_chunk$set(dev = 'pdf')
 ```
 
-```{r libraries, echo=FALSE, message=FALSE, results='hide'}
+```{r libraries, message=FALSE, results='hide'}
 library(Cygnus)
 library(viridis)
 library(plotly)
@@ -46,7 +45,6 @@ cyg
 When creating a Cygnus object using the CreateCygnus() function, the meta_col parameter refers to a column in the input .csv file that contains additional information about each EV. This may include sample annotations (e.g., indicating different cell lines), morphological characteristics (e.g., circularity), or clustering details.
 
 Cygnus objects also store metadata for each marker. This can include information such as marker relevance (i.e., whether a marker should be included for clustering), which will be demonstrated later in this tutorial. To view the overall structure of the object,
-
 
 ```{r view}
 # view(cyg)
@@ -85,9 +83,7 @@ plotDistribution(
 )
 ```
 
-You can see that most EVs from the A549 and H2228 cell lines have EpCAM expression values near 0, while those from the KP1.9 cell line are more centered around 1000. This could reflect one of two possibilities:
-(1) EVs from the KP1.9 cell line genuinely express higher levels of EpCAM, accurately capturing the underlying biology, or
-(2) there may be a technical bias—such as differences in staining efficiency, imaging intensity, or batch effects—that artificially inflates the measured scores in KP1.9 samples.
+You can see that most EVs from the A549 and H2228 cell lines have EpCAM expression values near 0, while those from the KP1.9 cell line are more centered around 1000. This could reflect one of two possibilities: (1) EVs from the KP1.9 cell line genuinely express higher levels of EpCAM, accurately capturing the underlying biology, or (2) there may be a technical bias—such as differences in staining efficiency, imaging intensity, or batch effects—that artificially inflates the measured scores in KP1.9 samples.
 
 ```{r message=FALSE, fig.width=5, fig.height=2}
 plotDistribution(
@@ -174,7 +170,6 @@ To determine whether a set of markers are present simultaneously on EVs, express
 
 In this example, a hard threshold of 1000 is applied: if the Raw_Score is greater than 1000, the binary score is 1; if less, it’s 0. For greater flexibility, thresholds can be specified as a vector with unique cutoffs for each marker. Cygnus also offers alternative methods to determine thresholds, such as using IgG distributions to correct for non-specific binding. More details can be found [here].
 
-
 ```{r}
 cyg <- createBinaryMatrix(cyg, thresholds = 5000)
 head(cyg@matrices$binary_exp_matrix)
@@ -207,11 +202,13 @@ After computing deviations and their associated p-values, marker co-localization
 
 plotUpset(cyg, colocal_marker, threshold_count = 10)
 ```
-Alternatively, a volcano plot can be used to more easily visualize significant intersections. Here, each intersection is labelled as a binary code, in the order of relevant markers. 
+
+Alternatively, a volcano plot can be used to more easily visualize significant intersections. Here, each intersection is labelled as a binary code, in the order of relevant markers.
 
 ```{r fig.width=7, fig.height=5}
 plotVolcano(colocal_marker)
 ```
+
 More information on interpreting UpSet and volcano plots can be found [here].
 
 ## Dimensionality Reduction and Clustering
@@ -244,23 +241,25 @@ set.seed(100)
 cyg <- runTSNE(cyg, matrix_name = "normalized_exp_mat")
 plotTSNE(cyg, color_by = "celltype", marker_size = 2, plot_3d = T)
 ```
-It is also possible to color by marker expression in different matrices: 
+
+It is also possible to color by marker expression in different matrices:
 
 ```{r}
 plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'Raw_Score')
 plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'normalized_exp_mat')
 plotTSNE(cyg, color_by = "EpCAM", marker_size = 5, matrix_name = 'binary_exp_matrix')
 ```
+
 #### UMAP
 
-```{r echo=FALSE, warning=FALSE}
+```{r warning=FALSE}
 cyg <- runUMAP(cyg, matrix_name = "normalized_exp_mat")
 plotUMAP(cyg, color_by = "celltype", marker_size = 5, plot_3d = T)
 ```
 
 ### Clustering
 
-Cygnus offers three different methods of unsupervised clustering: K-means, HDBSCAN, and leiden. 
+Cygnus offers three different methods of unsupervised clustering: K-means, HDBSCAN, and leiden.
 
 ```{r}
 cyg <- ClusterCygnus(cyg, n_clusters = 3)
@@ -275,9 +274,8 @@ plotBar(cyg, color_by = "celltype", split_by = "k_means_clusters")
 
 ## Outputs
 
-Key
+The processed Cygnus object can be stored in an .RDS format to facilitate data sharing and reproducible analysis.
 
 ```{r}
 
 ```
-
