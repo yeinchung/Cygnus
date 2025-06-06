@@ -35,4 +35,4 @@ Cygnus is currently in __beta__. If you think you have found a bug, please first
 ``` r
 devtools::install_github("yeinchung/Cygnus", ref="master", repos = BiocManager::repositories())
 ```
-If this does not fix your problem, please [report an issue on Github](https://github.com/yeinchung/Cygnus/issues) with the __Bug Report__ form. 
+If this does not fix your problem, please [report an issue on Github](https://github.com/yeinchung/Cygnus/issues).
