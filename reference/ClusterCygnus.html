@@ -60,10 +60,13 @@ The function updates the `CygnusObject` with the resulting cluster assignments.<
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ClusterCygnus</span><span class="op">(</span></span>
 <span>  <span class="va">CygnusObject</span>,</span>
 <span>  use.dims <span class="op">=</span> <span class="st">"PCA"</span>,</span>
-<span>  use.markers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  relevant_markers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  matrix_name <span class="op">=</span> <span class="st">"scaled_exp_matrix"</span>,</span>
-<span>  n_clusters <span class="op">=</span> <span class="fl">10</span></span>
+<span>  clustering_method <span class="op">=</span> <span class="st">"kmeans"</span>,</span>
+<span>  n_clusters <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  hdb_min_cluster_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  graph_distance <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  leiden_resolution <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -77,11 +80,7 @@ The function updates the `CygnusObject` with the resulting cluster assignments.<
 
 <dt id="arg-use-dims">use.dims<a class="anchor" aria-label="anchor" href="#arg-use-dims"></a></dt>
 <dd><p>A character string specifying the dimensionality reduction technique to use.
-Valid options are "PCA" (default), "tSNE", or "UMAP".</p></dd>
-
-
-<dt id="arg-use-markers">use.markers<a class="anchor" aria-label="anchor" href="#arg-use-markers"></a></dt>
-<dd><p>A logical value indicating whether to use marker genes for clustering (default is TRUE).</p></dd>
+Valid options are "PCA" (default), "tSNE", "UMAP", or None.</p></dd>
 
 
 <dt id="arg-relevant-markers">relevant_markers<a class="anchor" aria-label="anchor" href="#arg-relevant-markers"></a></dt>
@@ -94,8 +93,27 @@ Valid options are "PCA" (default), "tSNE", or "UMAP".</p></dd>
 The default is "scaled_exp_matrix".</p></dd>
 
 
+<dt id="arg-clustering-method">clustering_method<a class="anchor" aria-label="anchor" href="#arg-clustering-method"></a></dt>
+<dd><p>A character string specifying the method for clustering.
+"kmeans", "hdbscan", and "leiden" are available.</p></dd>
+
+
 <dt id="arg-n-clusters">n_clusters<a class="anchor" aria-label="anchor" href="#arg-n-clusters"></a></dt>
-<dd><p>An integer specifying the number of clusters to form (default is 10).</p></dd>
+<dd><p>An integer specifying the number of clusters to form (default is 3).
+Only used when clustering_method is set to "kmeans".</p></dd>
+
+
+<dt id="arg-hdb-min-cluster-size">hdb_min_cluster_size<a class="anchor" aria-label="anchor" href="#arg-hdb-min-cluster-size"></a></dt>
+<dd><p>An integer specifying the smallest size grouping to be considered as a cluster (default is 10).
+Only used when clustering_method is set to "hdmscan".</p></dd>
+
+
+<dt id="arg-graph-distance">graph_distance<a class="anchor" aria-label="anchor" href="#arg-graph-distance"></a></dt>
+<dd><p>The maximum number of nearest neighbours to compute. Used for leiden.</p></dd>
+
+
+<dt id="arg-leiden-resolution">leiden_resolution<a class="anchor" aria-label="anchor" href="#arg-leiden-resolution"></a></dt>
+<dd><p>Resolution parameter for leiden.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -107,7 +125,7 @@ The default is "scaled_exp_matrix".</p></dd>
     <p>The function performs the following steps:
 1. Extracts the specified expression matrix from the `CygnusObject`.
 2. Filters the matrix to include only relevant markers if specified.
-3. Retrieves the selected dimensionality reduction results (`PCA`, `tSNE`, or `UMAP`).
+3. Retrieves the selected dimensionality reduction results (`PCA`, `tSNE`, or `UMAP` or `None` ).
 4. Uses the reduced dimensions for K-means clustering to assign each sample to a cluster.
 5. Stores the cluster assignments in the `ev_meta` slot of the `CygnusObject`.</p>
     </div>
