@@ -27,13 +27,13 @@ One of the key strengths of UpSet plots is their scalability and ability to hand
 
 However, UpSet plots also have limitations. As the number of sets and intersections increases, the plot can become cluttered, making interpretation more challenging. Additionally, generating and customizing UpSet plots often requires specialized software or coding skills, which might pose a barrier for users without technical expertise. Lastly, there is currently no standardized method for integrating statistical analyses to identify significantly enriched or depleted intersections. Addressing these challenges would enhance the utility of UpSet plots for broader applications.
 
-##Adding statistical analysis to UpSet
+## Adding statistical analysis to UpSet
 
-###Concept of deviation
+### Concept of deviation
 
 When the UpSet plot was introduced, the concept of deviation was also discussed @6876017. Deviation describes the difference between the expected and observed cardinality. The expected cardinality is calculated under the assumption that the events in the intersection are independent, by multiplying the proportions of the intersecting sets. A high deviation suggests that the sets in the intersection share more-than-expected co-occurring elements, making it a measure of “surprise.” However, a high deviation may result from random chance or from a meaningful dependence between sets. This necessitates a statistical approach to quantify how likely a deviation value could arise from randomness.
 
-###Methodology for statistical significance
+### Methodology for statistical significance
 
 We propose a method to compute and visualize the statistical significance of deviations. The process begins with a matrix where rows indicate individual elements, and columns indicate their set memberships. For example, an element belonging to sets A and B, but not C, would be described as having a value of 1 in columns A and B and 0 in C. For each intersection, we simulate the null distribution of deviations by randomly permuting each column. This destroys any potential dependence or relationship between sets, ensuring the independence assumption is valid when calculating expected cardinalities. By comparing the observed deviation with the simulated null distribution, we calculate the likelihood of obtaining such a deviation by chance. This allows us to compute p-values for each intersection. We then apply a Bonferroni correction to identify statistically significant deviations.
 
