@@ -7,19 +7,20 @@
 ClusterCygnus(
   CygnusObject,
   use.dims = "PCA",
-  use.markers = TRUE,
   relevant_markers = TRUE,
   matrix_name = "scaled_exp_matrix",
-  n_clusters = 10
+  clustering_method = "kmeans",
+  n_clusters = 3,
+  hdb_min_cluster_size = 10,
+  graph_distance = 15,
+  leiden_resolution = 1
 )
 }
 \arguments{
 \item{CygnusObject}{A `CygnusObject` containing the data matrices and metadata for analysis.}
 
 \item{use.dims}{A character string specifying the dimensionality reduction technique to use.
-Valid options are "PCA" (default), "tSNE", or "UMAP".}
-
-\item{use.markers}{A logical value indicating whether to use marker genes for clustering (default is TRUE).}
+Valid options are "PCA" (default), "tSNE", "UMAP", or None.}
 
 \item{relevant_markers}{A logical value indicating whether to use only relevant markers for clustering
 (default is TRUE).}
@@ -27,7 +28,18 @@ Valid options are "PCA" (default), "tSNE", or "UMAP".}
 \item{matrix_name}{A character string specifying the name of the matrix to use from the `CygnusObject`.
 The default is "scaled_exp_matrix".}
 
-\item{n_clusters}{An integer specifying the number of clusters to form (default is 10).}
+\item{clustering_method}{A character string specifying the method for clustering.
+"kmeans", "hdbscan", and "leiden" are available.}
+
+\item{n_clusters}{An integer specifying the number of clusters to form (default is 3).
+Only used when clustering_method is set to "kmeans".}
+
+\item{hdb_min_cluster_size}{An integer specifying the smallest size grouping to be considered as a cluster (default is 10).
+Only used when clustering_method is set to "hdmscan".}
+
+\item{graph_distance}{The maximum number of nearest neighbours to compute. Used for leiden.}
+
+\item{leiden_resolution}{Resolution parameter for leiden.}
 }
 \value{
 A `CygnusObject` with the cluster assignments added to the `ev_meta` slot.
@@ -40,7 +52,7 @@ The function updates the `CygnusObject` with the resulting cluster assignments.
 The function performs the following steps:
 1. Extracts the specified expression matrix from the `CygnusObject`.
 2. Filters the matrix to include only relevant markers if specified.
-3. Retrieves the selected dimensionality reduction results (`PCA`, `tSNE`, or `UMAP`).
+3. Retrieves the selected dimensionality reduction results (`PCA`, `tSNE`, or `UMAP` or `None` ).
 4. Uses the reduced dimensions for K-means clustering to assign each sample to a cluster.
 5. Stores the cluster assignments in the `ev_meta` slot of the `CygnusObject`.
 }

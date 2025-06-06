@@ -260,8 +260,40 @@ plotUMAP(cyg, color_by = "celltype", marker_size = 5, plot_3d = T)
 Cygnus offers three different methods of unsupervised clustering: K-means, HDBSCAN, and leiden.
 
 ```{r}
-cyg <- ClusterCygnus(cyg, n_clusters = 3)
-plotTSNE(cyg, color_by = 'k_means_clusters', marker_size = 5) 
+# HDBscan - Noise points are given a value of 0, so increment by 1.
+cyg <- ClusterCygnus(CygnusObject = cyg, 
+                     use.dims = "tSNE", 
+                     relevant_markers = TRUE,
+                     matrix_name = "scaled_exp_matrix", 
+                     
+                     clustering_method = "hdbscan",
+                     hdb_min_cluster_size = 10)
+
+plotTSNE(cyg, color_by = 'hdbscan_clusters', marker_size = 5) 
+
+
+# leiden
+cyg <- ClusterCygnus(CygnusObject = cyg, 
+                     use.dims = "tSNE", 
+                     relevant_markers = TRUE,
+                     matrix_name = "scaled_exp_matrix", 
+                     
+                     clustering_method = "leiden",
+                     graph_distance=500,
+                     leiden_resolution =0.1)
+
+plotTSNE(cyg, color_by = 'leiden_clusters', marker_size = 5) 
+
+# No dim 
+cyg <- ClusterCygnus(CygnusObject = cyg, 
+                     use.dims = "None", 
+                     relevant_markers = TRUE,
+                     matrix_name = "scaled_exp_matrix", 
+                     
+                     clustering_method = "kmeans",
+                     n_clusters = 3)
+
+plotUMAP(cyg, color_by = 'k_means_clusters', marker_size = 5) 
 ```
 
 Clusters and their proportions can be visualized using the following approach:
@@ -275,5 +307,5 @@ plotBar(cyg, color_by = "celltype", split_by = "k_means_clusters")
 The processed Cygnus object can be stored in an .RDS format to facilitate data sharing and reproducible analysis.
 
 ```{r}
-
+#saveRDS(cyg, "specify_file_directory/processed_cyg.RDS")
 ```

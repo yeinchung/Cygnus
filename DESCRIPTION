@@ -35,7 +35,12 @@ Imports:
   webshot,
   RColorBrewer,
   ComplexUpset,
-  ggrepel
+  ggrepel, 
+  dbscan,
+  leidenbase, 
+  leiden, 
+  igraph, 
+  RANN
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 
