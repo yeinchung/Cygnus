@@ -302,7 +302,33 @@ plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", thresh
 
 }
 
+#' Generate an Volcano Plot from Colocalization Statistics
+#'
+#' @param colocal_data A data frame of deviations and statistics from running getColocalizedMarkers
+#' @param sig_threshold The threshold for significance
+#' @export
+plotVolcano <- function(colocal_data, sig_threshold = 0.05){
+  significance_threshold <- 0.05
+  log_threshold <- -log10(significance_threshold)
 
+  deviation_stats <- unique(colocal_data)
 
-
-
+  ggplot(deviation_stats, aes(x = Actual_Deviation, y = log10_p_adj, label = Intersection)) +
+    geom_point(aes(color = log10_p_adj, size = abs(Actual_Deviation)), alpha = 0.7) +
+    ggrepel::geom_text_repel(data = subset(subset(deviation_stats, log10_p_adj > 30), Actual_Deviation > 100),
+                    aes(label = Intersection),
+                    size = 4, fontface = "bold", color = "darkblue",
+                    box.padding = 0.6, max.overlaps = 15) +
+    geom_hline(yintercept = log_threshold, linetype = "dashed", color = "gray50") +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+    scale_color_gradientn(colors = c("blue", "purple", "red"),
+                          limits = c(0, max(deviation_stats$log10_p_adj))) +
+    labs(
+      x = "Actual Deviation",
+      y = expression(-log[10](adjusted~p~value)),
+      color = "-log10(p_adj)",
+      size = "Deviation Magnitude"
+    ) +
+    theme_classic(base_size = 15) +
+    theme(legend.position = "right")
+}

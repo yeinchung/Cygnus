@@ -13,15 +13,16 @@
 plotBar <- function(data, color_by = NULL, split_by = NULL){
   pt <-table(data@ev_meta[[color_by]], data@ev_meta[[split_by]]) # include error
   pt <- as.data.frame(pt)
-  pt$Var1 <- as.character(pt[1])
-  colnames(pt) <- c("Var1", "Var2", "Freq")
+
+  color_palette <- RColorBrewer::brewer.pal(length(levels(data@ev_meta[[split_by]])), "Set2")
 
   ggplot2::ggplot(pt, ggplot2::aes(x = Var2, y = Freq, fill = Var1)) +
     ggplot2::theme_bw(base_size = 15) +
     ggplot2::geom_col(position = "fill", width = 0.5) +
-    ggplot2::xlab("Sample") +
+    ggplot2::xlab(split_by) +
     ggplot2::ylab("Proportion") +
-    ggplot2::theme(legend.title = ggplot2::element_blank())
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::scale_fill_manual(values = color_palette)
 }
 
 

@@ -1,7 +1,7 @@
 Package: Cygnus
 Type: Package
 Title: Cyber Gateway to Nanovesicles Underlying Signatures 
-Version: 0.1.0
+Version: 1.0.0
 Author: Yein Chung, Yoonjeong Choi 
 Maintainer: Yein Chung <yeinchung04@gmail.com>
 Description: This package provides an analysis framework to analyze single-EV imaging data. 
@@ -34,7 +34,8 @@ Imports:
   viridis,
   webshot,
   RColorBrewer,
-  ComplexUpset
+  ComplexUpset,
+  ggrepel
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 
