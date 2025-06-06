@@ -273,3 +273,11 @@ Clusters and their proportions can be visualized using the following approach:
 plotBar(cyg, color_by = "celltype", split_by = "k_means_clusters")
 ```
 
+## Outputs
+
+Key
+
+```{r}
+
+```
+
