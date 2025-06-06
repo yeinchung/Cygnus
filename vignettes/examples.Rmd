@@ -6,9 +6,10 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 title: "Cygnus Example Analysis - A Tutorial"
 ---
+
 This tutorial covers reading a processed input file from AIVIA to generate an example report and 3D plots required for interactive data visualization. The instructions for package installation can be found <a href=https://yeinchung.github.io/Cygnus/>here</a>.
 
-For this tutorial, we will use example data from cell line derived extracellular vesicle imaging data. The data can be downloaded here.
+For this tutorial, we will use example data from cell line derived extracellular vesicle imaging data. The data can be downloaded [here](https://github.com/yeinchung/Cygnus/blob/master/inst/extdata/all_cells.csv).
 
 ```{r setup, include=FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
