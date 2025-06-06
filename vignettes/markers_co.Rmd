@@ -40,7 +40,7 @@ We propose a method to compute and visualize the statistical significance of dev
 
 ### Example analysis and interpretations
 
-For our analysis, we used imaging data from a mouse lungcancer cell lines, A549, H2228, and KP1.9. Each element represents an extracellular vesicle (EV), and set membership is determined by the expression of lung cancer-associated markers (e.g., EpCAM, EGFR, SDC1, MET, ADAM10). The results revealed that intersections involving all markers showed high deviations with p-values below the Bonferroni-corrected threshold. This indicates that the co-occurrence of these markers is likely attributable to inherent biological dependence rather than stochastic processes. Such findings highlight potential underlying biology and suggest that these markers may serve as reliable biomarkers for identifying EVs of lung cancer, owing to their consistent and significant co-expression patterns.
+For our analysis, we used imaging data from a mouse lungcancer cell lines, A549, H2228, and KP1.9. Each element represents an extracellular vesicle (EV), and set membership is determined by the expression of lung cancer-associated markers (e.g., EpCAM, EGFR, SDC1, MET, ADAM10). The results revealed that some intersections (e.g. ADAM10 and MET) showed high deviations with p-values below the Bonferroni-corrected threshold. This indicates that the co-occurrence of these markers is likely attributable to inherent biological dependence rather than stochastic processes. Such findings highlight potential underlying biology and suggest that these markers may serve as reliable biomarkers for identifying EVs of lung cancer, owing to their consistent and significant co-expression patterns.
 
 By incorporating statistical significance into UpSet plots, we provide a more rigorous and interpretable framework for analyzing set intersections. This method highlights biologically meaningful patterns that might otherwise be obscured.
 
@@ -48,6 +48,8 @@ By incorporating statistical significance into UpSet plots, we provide a more ri
 library(Cygnus)
 library(viridis)
 library(plotly)
+
+data.path <- "../inst/extdata/all_cells.csv" 
 
 cyg <- CreateCygnus(data.path,
                     markers_col = c("PanEV", "EpCAM", "MET",
