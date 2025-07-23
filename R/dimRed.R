@@ -292,7 +292,7 @@ plotUMAP <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1) {
 #' @param matrix_name Name of the matrix when colored by expression
 #' @return A plot of the t-SNE results!
 #' @export
-plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, matrix_name="Raw_Scores") {
+plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, matrix_name="Raw_Scores", color_palette = NULL) {
   if (!"tSNE" %in% names(data@dim_red)) {
     stop("t-SNE results not found. Run t-SNE first.")
   }
@@ -306,45 +306,89 @@ plotTSNE <- function(data, plot_3d = FALSE, color_by = NULL, marker_size = 1, ma
   colnames(plot_data) <- paste0("V", 1:ncol(plot_data))
 
   if (!is.null(color_by) && color_by %in% names(data@ev_meta)) {
-    plot_data$meta <- data@ev_meta[[color_by]]
-    plot_data$meta <- as.factor(plot_data$meta)
+    plot_data$meta <- as.factor(data@ev_meta[[color_by]])
 
-    if (is.factor(plot_data$meta)) {
+    # Use provided color palette or default to RColorBrewer
+    if (is.null(color_palette)) {
       color_palette <- RColorBrewer::brewer.pal(length(levels(plot_data$meta)), "Set3")
-      plot_data$color <- color_palette[plot_data$meta]
+    } else {
+      if (length(color_palette) < length(levels(plot_data$meta))) {
+        warning("Provided color palette has fewer colors than levels. Colors will be recycled.")
+      }
     }
+
+    plot_data$color <- color_palette[as.numeric(plot_data$meta)]
   }
 
-  if(!is.null(color_by) && color_by %in% colnames(data@matrices$Raw_Score)){
-    plot_data$meta <- data@matrices[[paste0(matrix_name)]][[color_by]]
+  if (!is.null(color_by) && color_by %in% colnames(data@matrices$Raw_Score)) {
+    plot_data$meta <- data@matrices[[matrix_name]][[color_by]]
 
-    viridis_colors <- viridis(1000)
-    magma_colors <- magma(1000)
-    normalized_values <- (plot_data$meta  - min(plot_data$meta )) / (max(plot_data$meta ) - min(plot_data$meta))
-    viridis_mapped_colors <- viridis_colors[as.numeric(cut(normalized_values, breaks = length(viridis_colors)))]
-    magma_mapped_colors <- magma_colors[as.numeric(cut(normalized_values, breaks = length(magma_colors)))]
+    # Use provided color palette if it's a viridis or magma alternative
+    if (is.null(color_palette)) {
+      color_palette <- magma(1000)
+    }
 
-    plot_data$color <- magma_mapped_colors
+    normalized_values <- (plot_data$meta - min(plot_data$meta)) / (max(plot_data$meta) - min(plot_data$meta))
+    mapped_colors <- color_palette[as.numeric(cut(normalized_values, breaks = length(color_palette)))]
+    plot_data$color <- mapped_colors
+  }
 
-  }#else if (!is.null(color_by)) {
-   # warning(paste("Metadata or gene name column", color_by, "not found. Plotting without color."))
-  #}
-
+  # Plotting
   if (plot_3d && ncol(tsne_coords) >= 3) {
-    if (!is.null(plot_data$color)) {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, color = ~meta, type = 'scatter3d', mode = 'markers', marker = list(size = marker_size)) %>%
-        plotly::layout(legend = list(title = list(text = color_by)))
-    } else {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'markers', marker = list(size = marker_size))
-    }
+    p <- plotly::plot_ly(
+      plot_data, x = ~V1, y = ~V2, z = ~V3,
+      color = if (!is.null(plot_data$color)) ~meta else NULL,
+      colors = color_palette,
+      type = 'scatter3d', mode = 'markers',
+      marker = list(size = marker_size)
+    ) %>%
+      plotly::layout(
+        legend = list(title = list(text = color_by)),
+        scene = list(
+          xaxis = list(
+            showbackground = FALSE, showgrid = FALSE,
+            zeroline = FALSE, showline = TRUE, linecolor = 'black',
+            title = "tSNE_1"
+          ),
+          yaxis = list(
+            showbackground = FALSE, showgrid = FALSE,
+            zeroline = FALSE, showline = TRUE, linecolor = 'black',
+            title = "tSNE_2"
+          ),
+          zaxis = list(
+            showbackground = FALSE, showgrid = FALSE,
+            zeroline = FALSE, showline = TRUE, linecolor = 'black',
+            title = "tSNE_3"
+          ),
+          bgcolor = 'rgba(0,0,0,0)'
+        ),
+        paper_bgcolor = 'rgba(0,0,0,0)',
+        plot_bgcolor = 'rgba(0,0,0,0)'
+      )
   } else {
-    if (!is.null(plot_data$color)) {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, color = ~meta, type = 'scatter', mode = 'markers', marker = list(size = marker_size)) %>%
-        plotly::layout(legend = list(title = list(text = color_by)))
-    } else {
-      plotly::plot_ly(plot_data, x = ~V1, y = ~V2, type = 'scatter', mode = 'markers', marker = list(size = marker_size))
-    }
+    p <- plotly::plot_ly(
+      plot_data, x = ~V1, y = ~V2,
+      color = if (!is.null(plot_data$color)) ~meta else NULL,
+      colors = color_palette,
+      type = 'scatter', mode = 'markers',
+      marker = list(size = marker_size)
+    ) %>%
+      plotly::layout(
+        legend = list(title = list(text = color_by)),
+        xaxis = list(
+          showgrid = FALSE, zeroline = FALSE,
+          showticklabels = TRUE, title = "tSNE_1",
+          showline = TRUE, linecolor = 'black', mirror = TRUE
+        ),
+        yaxis = list(
+          showgrid = FALSE, zeroline = FALSE,
+          showticklabels = TRUE, title = "tSNE_2",
+          showline = TRUE, linecolor = 'black', mirror = TRUE
+        ),
+        paper_bgcolor = 'rgba(0,0,0,0)',
+        plot_bgcolor = 'rgba(0,0,0,0)'
+      )
   }
+
+  return(p)
 }
-
-

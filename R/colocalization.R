@@ -344,7 +344,6 @@ plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", thresh
       axis.text = element_text(size = 11),  # Set axis text size
     )  # Set text size for the plot
   )
-  print(upset_plot)  # Print the plot with specified dimensions
   return(upset_plot)
 
 }
