@@ -188,6 +188,7 @@ getColocalizedMarkers <- function(data, matrix_name = "binary_exp_matrix", itera
 #' @param matrix_name The matrix within the data object that contains the binary expression matrix. The default is set to binary_exp_mat
 #' @param threshold_count An integer indicating the minimum number of elements in an intersection
 #' @param min_degree_setting An integer indicating the minimum degree of intersection for plotting
+#' @param upper_limit Specifies maximum value for y-axis
 #' @export
 plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", threshold_count = 1, min_degree_setting = 1){
   if (!"binary_exp_matrix" %in% names(data@matrices)) {
@@ -235,28 +236,47 @@ plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", thresh
     dplyr::pull(n) %>%
     max()
 
+  # Get the maximum set size.
+  # This value is to be uese to scale the set size plot
+  max_set_size <- plot_data[, relevant_markers] %>%
+    colSums() %>%
+    max()
+
   # upset plot
   upset_plot <- ComplexUpset::upset(
     plot_data,
     intersect = colnames(binary_df),
     min_degree = min_degree_setting,
-    name = "biomarkers",
-    stripes = c('white', 'grey90'),  # Color stripes for the plot #deepskyblue1
+    name = "Biomarker combinations",
+    stripes = c('white'),  # Color stripes for the plot #deepskyblue1
+    #stripes = c('white', 'grey90'),  # Color stripes for the plot #deepskyblue1
     set_sizes = (
-      ComplexUpset::upset_set_size()       # Add set sizes to the plot
+      ComplexUpset::upset_set_size(
+        geom=geom_bar(width=0.8, stat='count'),
+        position='right')
       + geom_text(
-        aes(label = ..count..),  # Add counts to set sizes
+        #aes(label = ..count..),  # Add counts to set sizes
+        aes(label = after_stat(count)),
         stat = "count",
-        hjust = -0.5,
-        size = 3,
-        color = "white"
+        hjust = -0.2,
+        vjust = 0.5,
+        size.unit = "pt",
+        size = 9,
+        #color = "white"
+        #color = 'blue'
+        color = "black"
+      )
+      + ylab('Set size')
+      + scale_y_continuous(limits = c(0, max_set_size*2),
+                           expand = expansion(mult = c(0, 0.1))
       )
       + theme(
+        axis.title.x = element_text(size = 11),
         axis.text.x = element_blank(),   # Remove x-axis text
         axis.ticks.x = element_blank(),  # Remove x-axis ticks
       )
     ),
-
+    guides='over',
 
     base_annotations=list(
       'Intersection size'=ComplexUpset::intersection_size(
@@ -266,39 +286,66 @@ plotUpset <- function(data, colocal_data, matrix_name = "binary_exp_mat", thresh
         text_colors=c(
           on_background='brown', on_bar='yellow' # Text colors
         ),
+        text <- list(size.unit = "pt", size = 9),
       )
       +
         annotate(   # Add annotation for significance
           geom='text', x=Inf, y=Inf,
-          label = paste('* : p-value < 0.005' ),
-          vjust=1.5, hjust=1,
-        )
+          label = substitute(paste("*", italic('p'), " < 0.005")),
+          size.unit = "pt", size = 10,
+          #vjust=1.5, hjust= 1.,
+          vjust=3, hjust= 1.5)
 
       +
         geom_text(  # Add significance stars to bars
           aes(
-            label = significant,
-            y = Observed + (Observed*0.05)
+            #label = significant,
+            label = ifelse(p_adj < 0.005, "*", ""),
+            #y = Observed + (Observed*0.05)
+            y = Observed  # Offset text above the bar
           ),
-          size = 5,
-          vjust = -0.5,
-          color = "black"
+          vjust = -1, hjust = 0.5,
+          size.unit = "pt", size = 11,
+          color = "black",
+          #color = "red"
         )
-
       +
         scale_fill_gradient2(  # Color gradient for deviations
           low = "orange", mid = "pink", high = "darkblue",
           midpoint = 0, na.value = "gray",
-          guide = guide_colorbar(title = "Deviation")
+          # make guide_colorbar title font size larger
+          guide = guide_colorbar(
+            title = "Deviation",
+            title.theme = element_text(size = 10),
+            theme = theme(legend.text = element_text(size = 9),
+                          legend.key.width  = unit(0.5, "lines"),
+                          legend.key.height = unit(5, "lines"))
+          )
         )
 
       + ylab('Intersection size')  # Y-axis label
-      + scale_y_continuous(limits = c(0, 1500))    ), # it was limits = c(0, max_count * 1.2) for automatic scaling
-
-    width_ratio = 0.1
+      + theme(axis.title.y = element_text(size = 12, vjust = -6),
+              axis.text.y = element_text(size = 11))
+      #      + scale_y_continuous(limits = c(0, 1500))     # it was limits = c(0, max_count * 1.2) for automatic scaling
+      + scale_y_continuous(limits = c(0, max_count * 1.2), expand = expansion(mult = c(0, 0.1))) # Add some space at the top
+      + theme(axis.line = element_line(color = "black", size = 0.25),  # Set axis line color and size
+              axis.ticks = element_line(color = "black", size = 0.25),  # Set axis ticks color and size
+              panel.grid.major = element_blank(),  # Remove major grid lines
+              panel.grid.minor = element_blank(),  # Remove minor grid lines
+              panel.background = element_rect(fill = "#FFFEE6", color = "white"),  # Set panel background color
+              #panel.background = element_blank(),  # Remove background color
+              #plot.margin = margin(10, 10, 10, 10)  # Set plot margins
+      )
+    ),
+    width_ratio = 0.15,
+    height_ratio = 0.8,
+    themes = ComplexUpset::upset_default_themes(
+      #text = element_text(color= 'red'),
+      axis.text = element_text(size = 11),  # Set axis text size
+    )  # Set text size for the plot
   )
-
-  print(upset_plot)
+  print(upset_plot)  # Print the plot with specified dimensions
+  return(upset_plot)
 
 }
 
@@ -315,7 +362,7 @@ plotVolcano <- function(colocal_data, sig_threshold = 0.05){
 
   ggplot(deviation_stats, aes(x = Actual_Deviation, y = log10_p_adj, label = Intersection)) +
     geom_point(aes(color = log10_p_adj, size = abs(Actual_Deviation)), alpha = 0.7) +
-    ggrepel::geom_text_repel(data = subset(subset(deviation_stats, log10_p_adj > 30), Actual_Deviation > 100),
+    ggrepel::geom_text_repel(data = subset(subset(deviation_stats, log10_p_adj > 30), Actual_Deviation > 10),
                     aes(label = Intersection),
                     size = 4, fontface = "bold", color = "darkblue",
                     box.padding = 0.6, max.overlaps = 15) +
